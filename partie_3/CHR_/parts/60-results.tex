@@ -1,0 +1,35 @@
+\section{Results and Analysis}
+\label{sec:results}
+%\joseph{les tables de résultats doivent être générées automatiquement pour éviter les erreurs de copier-coller. Il faut exporter les données au format pandas, et utiliser Dataframe.to\_latex(). Je suggère de diviser en 3 tableaux pour plus de simplicité, et d'en mettre en annexe si nécessaire (après tout la version avec OCR "réaliste" est la plus représentative de ce qu'on peut espérer en production, non ?)}
+
+We applied our matching method to five different pages (109 entries), each processed independently and exhibiting varying OCR qualities. The table below presents the results for each OCR-scanned page ---~processed without segmentation or correction~--- along with the corresponding sizes of the ground truth and predicted sets, and the number of matches ultimately selected by optimal transport.
+
+\begin{adjustbox}{width=\textwidth, center}
+\input{results/summary_table_03}
+\end{adjustbox}
+\newline
+
+All pages exhibit perfect biased precision and recall; however, as previously discussed, these metrics are inherently limited in our context. Since they are directly derived from the optimal assignment ---~enforcing a one-to-one matching between the two sets, at least when they are of equal size~--- they do not fully reflect alignment quality.
+
+The IMQ, on the other hand, offers a more nuanced assessment by capturing the distribution of match quality across all possible thresholds. For all processed pages, IMQ scores remain consistently high (ranging from 0.8193 to 0.9591), reflecting a strong homogeneity among correspondences. The IMQ also indirectly assesses the quality of the predicted dataset: not only are the matches structurally complete, but they also maintain an overall high level of semantic and syntactic proximity. Thus, the IMQ can be interpreted as a hybrid metric, functioning as a qualitative recall indicator while also integrating a proxy for precision, through penalization of low-quality matches.
+
+Minor variations are observed across pages. Pages 5 and 10 show somewhat lower IMQ scores, likely due to document-specific typographic inconsistencies. On these pages, a significant number of first names are not enclosed in parentheses following the last names, contrary to the formatting assumed in the ground truth. Specifically, 21\% of entries on page 5 and 39\% on page 10 exhibit this discrepancy, compared to 0\% on the other pages. This typographic variation increases the string comparison cost and negatively impacts match quality.
+
+Page 3, although exhibiting perfect biased recall and precision, has a slightly lower IMQ (0.8928). This may be attributed to OCR quality issues, particularly a fold in the gutter that introduces visual noise and degrades recognition performance.
+
+Conversely, page 2 shows a high IMQ (0.9059), despite an imperfect recall. This is likely due to a sampling bias, as the prompting process for the LLM was initially designed with the structure of this specific page in mind. Accordingly, the strong performance on this page should be interpreted cautiously, as it does not necessarily generalize to the others. However, we can see that the device adapts well to page 4, which has the best score.
+
+The 95.65\% recall on page 2 stems from a specific edge case in the source document, where an individual is listed twice (once as a senator and once as a minister). This leads to two distinct entries in the ground truth, while the LLM output consolidates them into a single prediction. We chose to preserve this functional distinction in the ground truth, while the model opted to factorize the information. This weakness is therefore linked to the design of the ground truth.
+
+For comparison with the deemed-perfect OCR:
+
+\begin{adjustbox}{width=\textwidth, center}
+\input{results/summary_table_01}\end{adjustbox}
+
+Performance is better overall. The potentially superior performance of the noisy OCR might stem from its capture of running headers at the top of pages, providing better context in situations where entries at the beginning of a page are truncated. In the case of page 2, the LLM reproduced the repetition and thus the distinction between a senator holding two functions. This drop in results is less linked to the LLM's superior performance in a noisy context than to a better alignment of its behavior with the ground truth's expectations.
+
+Consequently, there would also be a need to evaluate the prompt subsequently, as it is a crucial parameter for avoiding these errors. It's worth noting, however, that bypassing these exceptions in a massive extraction scenario would imply perfect knowledge of specific cases, which can be typographical or related to highly situational institutional choices. A schema with a reasonable degree of granularity and generic prompting allows for obtaining results that can be reasonably trusted, without requiring atomic knowledge of the documents' form. The calculation of statistics per page also offers bundles of clues about internal exceptions within the document structure, which can be significant.
+%\begin{itemize}
+ %   \item Comparative metric table (?)
+  %  \item Analysis of metric relevance
+%\end{itemize}

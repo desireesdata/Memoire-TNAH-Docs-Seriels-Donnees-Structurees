@@ -1,0 +1,101 @@
+\section{Schema-Guided Extraction of Parliamentary Interventions from Historical Indexes}
+\label{sec:documents-approach}
+
+\subsection{The 1931 \textit{Tables nominatives} of the French Senate}
+There is an edition of the \textit{Tables du Journal Officiel} for each year, typically comprising around 450 pages in the 1930s. The section entitled \textit{Tables des noms}—which includes both the Senate and the Chamber of Deputies—spans approximately forty pages, with the Senate portion generally covering around fifteen. For the year 1931, the Senate's \textit{Tables des noms} consists of 14 pages and roughly 300 entries, each corresponding to an intervention in the assembly.
+Each entry is associated with a speaker and details various types of actions (requests for interpellation, bill discussions, reading of committee reports, submission of amendments, etc.), along with a page reference directing the reader to the full transcription of the intervention. These transcriptions are published in the Senate's \textit{Débats parlementaires}. The \textit{Tables} are therefore functionally linked to the transcriptions through page numbers. Moreover, as pagination is continuous throughout the year, each page reference makes it possible to accurately determine the date of the corresponding intervention.
+
+
+%\joseph{insérer une image pour illustrer ? voir le faire dès l'introduction !}
+
+
+\subsection{Pipeline for Schema-Guided Structured Data Extraction}
+
+Despite recent advances in Large Vision-Language Models (LVLMs), their end-to-end, zero-shot performance remains insufficient for high-accuracy OCR tasks. To address this, we adopt a straightforward pipeline that leverages the strengths of specialized components to maximize overall extraction accuracy.
+
+First, each page image is processed independently using the PERO OCR engine~\cite{kodym2021layout,kis2021atst,kohut2021tsnet} to detect and transcribe text. Given the persistent challenges in general page layout segmentation, we generate three transcription variants per page to capture the variability inherent in such pipelines. Such variants will be described in more detail in \Cref{sec:xp-dataset}.
+
+Once the text for each page is obtained, we concatenate the transcriptions from all relevant pages to form a single text stream. This aggregated text is then provided as input to a Large Language Model (LLM), which is instructed to produce the target structured data. For practical reasons, we process each page independently, but the approach is readily extensible to multi-page contexts.
+
+\begin{figure}[tb!]
+  \centering
+   %\includegraphics[width=\textwidth]{img/simple_pipeline.png}
+  %\includesvg[width=\textwidth]{img/simple_pipeline.svg}
+   \includegraphics[width=0.95\textwidth]{img/pipeline.pdf}
+  \caption{Document processing pipeline. The input to the LLM consists of the concatenated OCR-extracted raw text, a natural language prompt, and a predefined schema describing the target structure. The LLM generates a structured JSON object as output.
+  %\joseph{Replace with the vector version of the figure (PDF). Clearly indicate that the LLM input consists of the concatenated page text, the prompt, and the schema, and that the output is a JSON object. Second gray box should be named "LLM".}
+  }
+  \label{fig:schema_pipeline}
+\end{figure}
+
+While LLMs can be prompted to generate structured outputs, it is essential to constrain their generations to match the expected format. Several methods exist for enforcing such constraints; the most effective to date involves filtering valid tokens during inference using an external validator, such as a finite state automaton~\cite{willard2023efficient}. This capability is available in the extended APIs of several commercial models.
+
+Our information extraction process thus relies on submitting OCR-processed text to the LLM and obtaining output that conforms to a predefined JSON schema. This setup requires three key components: \textbf{a data schema}, \textbf{a prompt}, and \textbf{an API supporting constrained output}.
+
+For this study, we selected the Mistral API\footnote{The Mistral API Documentation is available at \url{https://docs.mistral.ai/api/}.}, using the Ministral 8B Instruct v2410 model~\cite{MistralAI2024Ministral8B}. This choice is motivated by the model's strong zero-shot performance, cost-effectiveness, and the public availability of its weights for research purposes\footnote{Ministral 8B weights are available at \url{https://huggingface.co/mistralai/Ministral-8B-Instruct-2410}.}.
+
+
+\subsection{Data Modeling and Schema Definition}
+\label{sec:approach-datamodel}
+
+The primary goal of this study is to extract structured information on parliamentary activity in the French Senate for the year 1931, with the practical objective of building an interactive timeline that visualizes the density of interventions over time. To ensure the reliability and interpretability of this timeline, it is crucial to provide clear indicators of extraction quality.
+
+Directly linking extraction reliability to the confidence in answering historical research questions remains an open challenge. Therefore, we focus our evaluation on well-defined metrics that quantify the similarity between the predicted intermediate data structure and a reference (ground truth) structure. While these metrics do not yet account for the semantic impact of each error, they offer a transparent basis for assessing extraction performance.
+
+The core extraction task centers on identifying individual entries in the \textit{Tables nominatives} ---~specifically, the names of senators and their associated page references. These page numbers serve as indirect temporal markers, as the source documents use continuous pagination throughout the year. The extracted information is represented in JSON format, which is both structured and interoperable, facilitating downstream processing and conversion to tabular formats (e.g., CSV). Figure~\ref{fig:json_struct} illustrates the target output structure.
+
+\begin{figure}[tb!]
+\centering
+\small
+\begin{verbatim}
+{
+  "list_of_speakers": [
+    {
+      "name": "Dentu",
+      "page_references": [
+        1024,
+        1031,
+        1560,
+        1563,
+        1564
+      ]
+    },
+    {
+      "name": "Desjardins (Charles)",
+      "page_references": [
+        563
+      ]
+    }
+  ]
+}
+\end{verbatim}
+\caption{Example JSON output representing structured data extracted from the \textit{Tables nominatives}. Each entry corresponds to a participant (e.g., a senator) and a list of page numbers where they are mentioned. These references act as temporal markers due to the continuous pagination of the source. For simplicity, intervention categories are omitted in this study. %\joseph{Consider moving this figure to the introduction for a general overview.}
+}
+\label{fig:json_struct}
+\end{figure}
+
+The data schema guiding LLM inference is defined at the granularity of speaker names and their corresponding page references, which suffices for constructing the intended timeline. We use Pydantic\footnote{Pydantic documentation is available at \url{https://docs.pydantic.dev}.}, a Python library for data modeling, to specify the schema in a JSON-compatible format with strict type validation and embedded descriptions. These description fields serve as semantic tags, enhancing both prompt clarity and LLM guidance. Figure~\ref{fig:pydantic_schema} (see \Cref{appdx:schema}) presents the simplified schema used in this work.
+
+%     page_references: Union[List[int], str] = Field(..., 
+% ↑ general model which can handle cross-references
+
+\subsection{Prompting the LLM for Structured Data Extraction}
+
+The prompt provided to the LLM (see \Cref{appdx:full-prompt}) is designed to guide the extraction of political participants—primarily senators and ministers—and their associated page references from the input text. Its structure is as follows:
+
+\begin{itemize}
+  \item \textbf{Task Definition:} The prompt clearly states that the input consists of entries, each corresponding to an individual involved in Senate activities (e.g., senators, ministers), and that the goal is to extract their names and the page numbers referencing their interventions.
+  \item \textbf{Key Term Clarification:} Definitions are provided for essential terms such as ``entries'' and ``actions'' to ensure unambiguous interpretation.
+  \item \textbf{Handling Special Cases:} The prompt specifies procedures for cases such as index cross-references (where no page numbers are given, only a reference to another entry) and split entries spanning multiple pages (which are to be ignored in this preliminary study to maintain extraction simplicity).
+  \item \textbf{Formatting Instructions:} Explicit guidelines are given for representing names (e.g., first names in brackets after last names) and formatting page references.
+\end{itemize}
+
+Optionally, the prompt could be further improved by incorporating additional historical context or representative examples (few-shot prompting).
+
+
+\subsection{Iterative Refinement of the Data Model and Prompt}
+Both the data schema and the extraction prompt underwent iterative refinement during this study. This process was motivated by the observation that the LLM occasionally proposed alternative, and sometimes more effective, ways of structuring the extracted information than initially anticipated. For instance, the model would naturally deduplicate repeated page references for a given speaker, streamlining the output beyond the original schema specification. Consequently, the construction of the ground truth required a balance between adhering to formal schema constraints and accommodating the LLM’s practical structuring tendencies.
+
+To ensure unbiased evaluation, all schema and prompt adjustments were based exclusively on performance observed on a single development page (referred to as \textbf{``page 02''} in experiments), with the remaining pages reserved for final testing. This approach aligns with standard machine learning practice, maintaining a clear separation between development and evaluation data.
+
+Future work could automate this refinement loop or incorporate more systematic prompt engineering strategies.

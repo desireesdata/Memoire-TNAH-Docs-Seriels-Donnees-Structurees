@@ -1,0 +1,28 @@
+\section{Conclusion}
+This work explored using large language models for structured data generation from historical sources, focusing on a specific case study, namely the 1931 \textit{Tables nominatives} of the French Senate. The approach ---~combining OCR, schema-guided structuring, and constrained generation via LLM~--- produced results evaluated with a more appropriate metric for an optimal alignment protocol, linking reference data with predicted data. The introduction of the IMQ metric was particularly crucial, allowing us to assess structuring quality beyond the traditional precision/recall scores, which are inadequate in this context.
+
+Several avenues emerge for strengthening the approach's robustness and generalization. A central challenge, already noticeable in this work, lies in better connecting response hypotheses to research questions with automatically produced intermediate data. This will allow for evaluating their long-term robustness concerning the production process. Conversely, evaluating the prompt itself remains to be done to achieve a truly complete evaluation protocol. In any case, data structuring cannot be considered a simple, neutral pre-processing step: it dictates the form of possible historical analyses.
+
+From this perspective, the prompt and the data model must be considered as ``meta-parameters'' of the entire historical data production system. It becomes essential to conceptualize their generation and adjustment as an integral part of the historical data processing chain. A promising path would involve systematizing and automating this meta-optimization process to make these approaches reproducible, transparent, and accessible to non-expert users.
+
+%\vspace{1cm}
+%\joel{archives des commentaires :}
+%\begin{itemize}
+%    \item Summary
+%    \item Future work
+%\end{itemize}
+%remaining challenge: effectively assess the impact of automated data transformation stages on final, historical interpretation of facts.
+
+%Further experiments:
+
+%compare with other LLMs
+%$\rightarrow$  possible, mais l'article montre la démarche, il ne compare pas systématiquement la performance des LLMs
+
+%develop “on peut utiliser les données produites pour entraîner un modèle plus léger (de type Bert);
+%$\rightarrow$ pertinence limitée si on a bien argumenté sur l'importance de ne pas avoir à gérer un training supplémentaire, dans ce cas peut-être plutôt parler de l'enjeux à rendre ce genre d'approche disponible pour les non-experts
+
+%faire une visualisation de l’activité parlementaire en 1931;
+%$\rightarrow$ oui ça pourrait même être en annexe… mais l'intérêt (au regard de cet article) serait plutôt de regarder comment évaluer la fiabilité des conclusions / des outils produits avec une telle timeline ! \textbf{(une des conclusions de l'article selon moi : il faut continuer à "connecter" les hypothèses de réponse aux questions de recherche aux données intermédiaires pour permettre, à terme, d'évaluer leur robustesse au regard du processus qui a permis leur production)}
+
+%continuer l’évaluation et en particulier en prenant en considération le prompt.
+%$\rightarrow$ \textbf{piste la plus intéressante selon moi, et une des conclusion de l'article je pense} : systématiser et automatiser la production du modèle de données et du prompt comme des méta-paramètres du modèle ; i.e., suivre une démarche de méta-optimisation de modèle pour avoir une démarche fiable et rigoureuse

@@ -10,3 +10,5 @@
 *.bak
 *__.pdf
 *_.tex
+.env
+/env

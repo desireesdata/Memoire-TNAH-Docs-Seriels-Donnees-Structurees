@@ -2,9 +2,13 @@
 
 ## Commandes shell & bash
 
-J'écris mes textes en markdown, avec l'éditeur *Marktext*. C'est plus commode pour moi d'écrire avec ce logiciel d'édition avec sa typographie épurée. 
+J'écris mes textes en markdown, avec l'éditeur *Marktext*. C'est plus commode pour moi d'écrire avec ce logiciel d'édition avec sa typographie épurée puis de convertir en LaTex avec des Regex.
 
 Voici mes scripts / regex qui convertissent mes .md en .tex :
+
+```bash
+./md2tx.sh monfichier.md
+```
 
 **Italiques**
 

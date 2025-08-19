@@ -1,0 +1,115 @@
+% THIS IS A LATEX TEMPLATE FILE FOR PAPERS INCLUDED IN THE
+% *Anthology of Computers and the Humanities*. ADD THE OPTION
+% 'final' WHEN CREATING THE FINAL VERSION OF THE PAPER. 
+% DO NOT change the documentclass
+%\documentclass[final]{anthology-ch} % for the final version
+\documentclass{anthology-ch}         % for the submission
+
+% LOAD LaTeX PACKAGES
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{adjustbox}
+\usepackage{fancyvrb}
+\usepackage{svg}
+\usepackage{comment}
+\usepackage[inkscapelatex=false]{svg}
+% ADD your own packages using \usepackage{}
+\usepackage{cleveref}
+\usepackage{paralist}
+
+
+\newcommand{\joseph}[1]{\textcolor{blue}{Joseph:~#1}}
+\newcommand{\marie}[1]{\textcolor{red}{Marie:~#1}}
+\newcommand{\joel}[1]{\textcolor{purple}{Jo{\"e}l:~#1}}
+
+
+% TITLE OF THE SUBMISSION
+% Change this to the name of your submission
+\title{Producing Structured Data from Historical Sources:\\a Preliminary Application to French Senate \textit{Tables}}
+%% ou aussi "…: Experiments on French Senate Tables"
+%% ou: "From Historical Sources to Structured Data: …"
+
+% AUTHOR AND AFFILIATION INFORMATION
+% For each author, include a new call to the \author command, with
+% the numbers in brackets indicating the associated affiliations 
+% (next section) and ORCID-ID for each author.  
+\author[1,2]{Jo{\"e}l F{\'e}eral}[
+  orcid=0009-0005-6646-0733
+]
+
+\author[1]{Joseph Chazalon}[
+  orcid=0000-0002-3757-074X
+]
+
+% While we encourage including ORCID-IDs for all authors, you can
+% include authors that do not have one by definining an empty ID.
+\author[1]{Marie Puren}[
+  orcid=0000-0001-5452-3913
+]
+
+% There should be one call to \affiliation for each affiliation of
+% the authors. Multiple affiliations can be given to each author
+% and an affiliation can be given to multiple authors. 
+\affiliation{1}{EPITA Research Lab, Le Kremlin-Bic{\^e}tre, France}
+\affiliation{2}{{\'E}cole des Chartes, Paris, France}
+
+% KEYWORDS
+% Provide one or more keywords or key phrases seperated by commas
+% using the following command
+\keywords{Parliamentary Archives, Structured Data, Generative Models, Evaluation}
+
+% METADATA FOR THE PUBLICATION
+% This will be filled in when the document is published; the values can
+% be kept as their defaults when the file is submitted
+\pubyear{2025}
+\pubvolume{1}
+\pagestart{1}
+\pageend{1}
+\conferencename{Proceedings of Conference XXX}
+\conferenceeditors{Editor1 Editor2}
+\doi{00000/00000}  
+
+\addbibresource{bibliography.bib}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% HERE IS THE START OF THE TEXT
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\input{parts/00-abstract}
+\end{abstract}
+
+%\section*{Acknowledgements}
+%\textit{Omitted during review phase.}
+% TODO thank BnF / Mezanno project funding
+
+\input{parts/10-intro}
+\input{parts/20-related-work}
+\input{parts/30-documents-approach}
+\input{parts/50-experiments}
+\input{parts/60-results}
+\input{parts/80-conclusion}
+
+
+
+% Print the biblography at the end. Keep this line after the main text of your paper, and before an appendix. 
+\clearpage
+\printbibliography
+
+% You can include an appendix using the following command
+\clearpage
+\appendix
+\input{appendix/table_jo}
+\clearpage
+\input{appendix/prompt}
+\clearpage
+\input{appendix/schema}
+\clearpage
+\input{parts/90-appendix}
+
+
+\end{document}
