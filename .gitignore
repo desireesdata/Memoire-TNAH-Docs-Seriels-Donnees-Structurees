@@ -12,3 +12,6 @@
 *_.tex
 .env
 /env
+*/CHR_/*
+/CHR_/
+partie_3/CHR_
