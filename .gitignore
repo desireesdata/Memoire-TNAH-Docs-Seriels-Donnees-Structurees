@@ -14,4 +14,6 @@
 /env
 */CHR_/*
 /CHR_/
-/partie_3/CHR_
+/partie_3/CHR_julia-1.12.0-beta1*
+*.so
+*.tar.gz
