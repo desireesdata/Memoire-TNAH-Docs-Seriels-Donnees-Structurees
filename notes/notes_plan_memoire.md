@@ -41,7 +41,7 @@
 > conduit par une question fermée, mais comment on fait pour mettre en 
 > place un protocole expérimental pour en extrait la moelle.
 
-## **Partie 1 — Des sources sérielles Réflexions historiennes**
+## **Partie 1 — Des sources sérielles : les tables annuelles du sénat**
 
 > Changement d'échelle pour le traitement des volumétries. Changement quantitatif qualitatif. Sous exploité justqu'à récemmment. Le cas d'usage des tables : Pivot/ colonne vertebrales a une base d'orientation pour cesconnaissances là.
 
@@ -295,3 +295,11 @@ Les perspectives ouvertes incluent :
 Commençons par une image. Ramon Llull, dans son *Ars Magna*, proposait un système combinatoire fondé sur des disques concentriques mobiles de papier pour générer mécaniquement des questions et des réponses. Ces roues, organisées en cercles imbriqués, permettaient d'associer des concepts symbolisés par des lettres afin de couvrir l'ensemble des champs du savoir. L'objectif était de créer une méthode universelle de raisonnement et de démonstration, basée sur des questions et des réponses, combinant logique, théologie et philosophie. Si cette entreprise n'a aujourd'hui certes pas grande valeur scientifique, elle permet d'imager un travail : celui de la calculabilité d'entités conceptuelles par une traduction symbolique et relationnelle. Il a supposé que le travail intellectuel sur les mots et les choses reposait sur leur calculabilité, laquelle exige une réduction algébrique. Voici donc une métaphore de la mise en données : c'est une *stratégie épistémique* basée sur une modélisation synthétique des phénomènes ou des idées [Lorraine Daston].
 
 Sans prétendre dessiner une histoire en pente douce qui commencerait à Ramon Llull pour aboutir aux ordinateurs modernes -- il serait couteux de postuler que l'*Ars Magna* lullien releverait de la même historicité des machines modernes -- , on veut ici illustrer la notion de *datafication*.
+
+___
+
+# Données et FAIRness : de la valuation et de l'évaluation
+
+La dimension "personnelle" des données, la FAIRNESS ==> implique d'expliciter la "sitaution" des données, de leurs valuations et de leur qualité (évaluation. Nécessité d'évaluer. 
+
+« Most literary scholars would no more simply use the “results” *of a fellow scholar than they would use her toothbrush* » (Responses to Moretti, p. 4). 5

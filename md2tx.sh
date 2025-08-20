@@ -15,6 +15,7 @@ cp "$FICHIER" "$SORTIE"
 sed -i -E 's/^#{1} (.*)/\\chapter{\1}/' "$SORTIE"
 sed -i -E 's/^#{2} (.*)/\\section{\1}/' "$SORTIE"
 sed -i -E 's/^#{3} (.*)/\\subsection{\1}/' "$SORTIE"
+sed -i -E 's/^#{4} (.*)/\\subsubsection{\1}/' "$SORTIE"
 
 # Blockquotes
 sed -i -E '/^>/ { s/^> ?/\\begin{quote}/; s/$/\\end{quote}/ }' "$SORTIE"
