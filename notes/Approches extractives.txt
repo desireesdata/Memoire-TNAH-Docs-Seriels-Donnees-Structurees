@@ -1,0 +1,43 @@
+## Approches génératives : les LLMs
+
+L’usage croissant de l’intelligence artificielle par les historiens \[3] multiplie les possibilités de production de jeux de données historiques. L’avènement des grands modèles de langage (LLMs) modifie encore davantage le paysage, en particulier pour le traitement des corpus textuels, avec une prolifération d’usages et d’expérimentations dans les sciences humaines et sociales¹. Les LLMs en *zero-shot* sont capables d’accomplir une large gamme de tâches sans nécessiter d’exemples spécifiques à la tâche ni de réglages fins \[12, 22, 26], et ont démontré leur capacité à effectuer de nombreuses opérations chronophages de la recherche historique, telles que la transcription \[6], l’extraction d’information \[9], ou encore l’annotation \[24].
+
+L’utilisation des LLMs ouvre de nouvelles perspectives pour l’extraction de données structurées \[13] à partir de documents historiques. Dans ce contexte, un défi central réside dans la production de sorties structurées. Une première approche consiste à contraindre la génération d’un modèle de langage pour qu’il produise directement l’information dans un format prédéfini (par exemple, du JSON). À l’inverse, la structure peut être imposée par un post-traitement de sorties textuelles libres. Quelle que soit l’approche, la production de données structurées permet d’assurer la traçabilité jusqu’au document original et de faciliter la vérification des sources. Elle soutient également des usages en aval, tels que l’intégration dans une base de données ou l’analyse computationnelle.
+
+Deux questions fondamentales demeurent cependant :
+
+1. comment passer d’un texte brut à une représentation structurée exploitable, telle qu’un tableau ou un fichier CSV ;
+2. comment évaluer la qualité et la fiabilité des données extraites.
+
+Cet article aborde ces deux aspects à travers une étude de cas concrète : l’extraction d’informations structurées à partir des *Tables nominatives* (ou *Tables des noms*) du Sénat français de 1931, qui constituent un index de l’activité parlementaire classé par nom. Nous explorons une approche de génération faiblement contrainte à l’aide d’un LLM, et proposons une méthode pour représenter les données cibles, guider le processus d’extraction et évaluer les performances du système. Au-delà de ce cas spécifique, l’étude vise à contribuer à une réflexion plus large sur la faisabilité et les limites des modèles génératifs pour la structuration de données historiques.
+
+Les *Tables des noms* du Sénat français furent publiées durant la Troisième République (1870–1940)². Dans l’écosystème documentaire plus large du *Journal Officiel* — qui vise à reconstituer l’activité parlementaire et ses issues juridiques ou réglementaires en France —, les *Tables nominatives* du Sénat offrent un relevé concis et systématique des interventions des sénateurs en séance publique. Ces index étaient conçus pour accompagner la transcription des débats³ et en faciliter la consultation. Compilés manuellement une fois par an, ils recensent chaque intervention d’un sénateur ou d’un membre du gouvernement, précisent l’objet de son discours et indiquent la pagination correspondante. Si ces tables étaient particulièrement utiles à une époque où la recherche plein texte dans les débats parlementaires numérisés n’était pas possible, elles conservent aujourd’hui encore une forte valeur pour les historiens. Une extraction systématique des données permettrait de suivre l’activité parlementaire sur le long terme, de quantifier les interventions de sénateurs affiliés à certains mouvements politiques, ou encore de soutenir la validation croisée des entités nommées extraites des débats eux-mêmes.
+
+Notre objectif est d’extraire des données structurées de ces tables ; pour nos premières expérimentations, nous nous concentrons sur une seule table nominative, celle de 1931. Le début des années 1930 marque en effet l’entrée du parlementarisme français dans une phase de déclin, qui culmine avec la chute de la Troisième République en 1940 \[17]. L’analyse de la table de 1931 permet de poser les bases d’une étude élargie à l’ensemble de la décennie, afin de mieux saisir l’activité parlementaire du Sénat puis, ultérieurement, celle de la Chambre des députés.
+
+Après un état de l’art des approches existantes pour l’extraction et l’évaluation de données structurées (## Travaux connexes), nous présentons trois contributions principales :
+
+1. nous concevons et mettons en œuvre une chaîne de traitement guidée par un schéma, pour extraire des informations structurées à partir des *Tables nominatives* du Sénat, en combinant OCR et génération à base de prompt avec un LLM (## Schéma et pipeline) ;
+2. nous introduisons un protocole d’évaluation adapté à cette tâche, incluant une méthode d’alignement par appariement optimal et une métrique continue qui prend en compte les sorties partielles et bruitées (## Protocole d’évaluation) ;
+3. nous fournissons une évaluation empirique de l’extraction par LLM dans ce contexte historique, montrant que les performances du modèle sont fortement influencées par la conception du prompt et du schéma de données — deux éléments que nous proposons de considérer comme des paramètres critiques du processus de modélisation global (## Résultats).
+
+**Principe** : le modèle produit directement le résultat structuré à partir du texte, sur la base d’une consigne en langage naturel.
+
+- **LLMs** (GPT, Claude, Mistral) en extraction via prompt
+
+- **Fine-tuning génératif** (T5, GPT-4 en mode extraction JSON)
+  => Avantage : très flexible, pas besoin de jeu d’entraînement spécialisé
+  => Limite : variabilité, hallucinations, besoin de validation
+
+## Approches hybrides
+
+**Principe** : combiner plusieurs catégories dans un flux de traitement.
+
+- Exemple : Gazetteer pour repérer des entités connues + BERT pour les autres + Regex pour les formats normés + validation humaine
+  => Avantage : maximiser précision et rappel
+  => Limite : complexité d’intégration
+
+## La sortie structurée via LLM pour la capture sémantique du Journal Officiel
+
+Expliquer le choix des LLMs (rapide et pas cher + pas d'entrainement ou de spécialisation).
+

@@ -1,0 +1,14 @@
+
+
+## Évaluer la qualité des données structurées
+
+Une fois les données produites, la question de leur **qualité** et de leur **fiabilité** se pose. L’évaluation n’est pas triviale : elle suppose de comparer les sorties du système avec une vérité de référence, en tenant compte des cas d’imprécision, de bruit ou de correspondances partielles. Deux grandes familles de métriques dominent la littérature : les métriques de **distance d’édition** et celles d’**appariement** [2].
+
+Les **métriques de distance d’édition** calculent le coût nécessaire pour transformer une structure prédite en une structure de référence. Elles incluent la distance de Levenshtein (mesurée caractère par caractère) ou la distance d’édition d’arbres [25] pour les structures hiérarchiques. Elles offrent une vision continue de la différence entre données produites et attendues, mais leur interprétabilité reste limitée. De plus, elles sont souvent coûteuses en calcul, en particulier pour les graphes ou les structures imbriquées.
+
+Les **métriques d’appariement**, au contraire, mettent l’accent sur la correspondance explicite entre éléments. La logique consiste à établir un appariement biparti entre l’ensemble des prédictions et celui des références, puis à dériver des scores classiques comme la précision, le rappel ou la mesure F1. L’indice de Jaccard, qui mesure la similarité entre ensembles, appartient à la même famille. Ces mesures sont plus intuitives et interprétables, mais elles supposent que les éléments prédits correspondent « parfaitement » aux éléments attendus, ce qui est rarement le cas dans des données bruitées ou partiellement extraites.
+
+Il est intéressant de noter que d’autres domaines rencontrent les mêmes difficultés. En vision par ordinateur, le *COCO Panoptic Segmentation Challenge* [7] propose par exemple une évaluation reposant sur un appariement optimal entre les objets prédits et les objets de référence. De manière analogue, Chen et al. [2] ont introduit des méthodes permettant de prendre en compte des correspondances imparfaites.
+
+Dans nos travaux, nous adoptons précisément une métrique d’appariement basée sur un algorithme d’optimisation qui généralise l’appariement biparti. Ce choix permet non seulement d’obtenir une mesure quantitative de la qualité des données extraites, mais aussi d’identifier les éléments manquants, incorrects ou « hallucinés ». L’évaluation n’est donc pas une simple note globale, mais un diagnostic opérationnel fournissant des pistes concrètes pour améliorer le processus d’extraction.
+

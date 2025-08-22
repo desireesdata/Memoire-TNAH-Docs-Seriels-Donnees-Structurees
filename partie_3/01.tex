@@ -4,7 +4,7 @@ De l'importance de Valuation, évaluation. La question de la métrique. Article 
 
 \chapter{Expérimentations}
 
-Un travail d'exploration technique Une fois la tâche définie (éval de la sortie structurée).
+Un travail d'exploration technique a été fait. Une fois la tâche définie (éval de la sortie structurée).
 TED, donut, Métriqe de l'inégalité triangulaire.
 
 \chapter{Livrable}
@@ -24,23 +24,25 @@ Ces transcriptions sont publiées dans les \emph{Débats parlementaires} du Sén
 Malgré les avancées récentes des grands modèles de vision et langage (LVLMs), leurs performances \emph{end-to-end} en zéro-shot restent insuffisantes pour des tâches d’OCR à haute précision. Pour contourner cette limite, nous adoptons une chaîne de traitement simple, exploitant les forces de composants spécialisés afin de maximiser la précision globale de l’extraction.
 
 \begin{enumerate}
-\item Chaque page image est d’abord traitée indépendamment par le moteur OCR \textbf{PERO} \[8, 10, 11] pour détecter et transcrire le texte.
+\item Chaque page image est d’abord traitée indépendamment par le moteur OCR \textbf{PERO} [8, 10, 11] pour détecter et transcrire le texte.
 \item Compte tenu des difficultés persistantes de segmentation de mise en page, nous produisons trois variantes de transcription par page afin de refléter la variabilité de ce type de pipeline (détaillées en section 4.1).
 \item Une fois les transcriptions obtenues, nous concaténons le texte issu de toutes les pages pertinentes pour former un flux unique. Celui-ci est fourni en entrée à un LLM, chargé de produire les données structurées cibles.
-\end{enumerate}
 
+\end{enumerate}
 Dans nos expérimentations, pour des raisons pratiques, chaque page est traitée indépendamment, mais la méthode peut être étendue à des contextes multi-pages.
 
-Bien que les LLMs puissent être incités à générer des sorties structurées, il est essentiel de contraindre leurs générations au format attendu. Parmi les méthodes existantes, la plus efficace repose sur le filtrage des tokens valides au moment de l’inférence à l’aide d’un validateur externe (par exemple un automate fini) \[23]. Cette capacité est disponible dans certaines API commerciales étendues.
+Bien que les LLMs puissent être incités à générer des sorties structurées, il est essentiel de contraindre leurs générations au format attendu. Parmi les méthodes existantes, la plus efficace repose sur le filtrage des tokens valides au moment de l’inférence à l’aide d’un validateur externe (par exemple un automate fini) [23]. Cette capacité est disponible dans certaines API commerciales étendues.
 
 Notre processus d’extraction s’appuie donc sur :
 
-* un texte prétraité par OCR,
-* un schéma prédéfini (JSON),
-* un prompt naturel,
-* et une API supportant les sorties contraintes.
+\begin{itemize}
+\item un texte prétraité par OCR,
+\item un schéma prédéfini (JSON),
+\item un prompt naturel,
+\item et une API supportant les sorties contraintes.
 
-Pour cette étude, nous avons retenu l’API \textbf{Mistral}⁴, avec le modèle \emph{Ministral 8B Instruct v2410} \[16], en raison de ses bonnes performances \emph{zero-shot}, de son coût modéré et de la disponibilité publique de ses poids à des fins de recherche⁵.
+\end{itemize}
+Pour cette étude, nous avons retenu l’API \textbf{Mistral}⁴, avec le modèle \emph{Ministral 8B Instruct v2410} [16], en raison de ses bonnes performances \emph{zero-shot}, de son coût modéré et de la disponibilité publique de ses poids à des fins de recherche⁵.
 
 \subsection{Modélisation des données et définition du schéma}
 
@@ -56,11 +58,13 @@ Le schéma de données utilisé pour guider le LLM est défini au niveau des nom
 
 Le prompt fourni au LLM (cf. Annexe B) vise à guider l’extraction des participants (sénateurs, ministres) et de leurs références de pages à partir du texte. Sa structure est la suivante :
 
-* \textbf{Définition de la tâche} : préciser que chaque entrée correspond à une personne ayant participé aux activités du Sénat (sénateurs, ministres, etc.), dont il faut extraire le nom et les références de pages.
-* \textbf{Clarification des termes} : donner des définitions pour des termes clés comme « entrée » ou « action », afin d’éviter toute ambiguïté.
-* \textbf{Cas particuliers} : indiquer comment traiter les cas de renvois d’index (sans numéros de pages, mais renvoyant vers une autre entrée) et les entrées fragmentées sur plusieurs pages (ignorées pour simplifier cette première étude).
-* \textbf{Instructions de formatage} : spécifier les règles de présentation des noms (prénom entre parenthèses après le nom de famille) et des références de pages.
+\begin{itemize}
+\item \textbf{Définition de la tâche} : préciser que chaque entrée correspond à une personne ayant participé aux activités du Sénat (sénateurs, ministres, etc.), dont il faut extraire le nom et les références de pages.
+\item \textbf{Clarification des termes} : donner des définitions pour des termes clés comme « entrée » ou « action », afin d’éviter toute ambiguïté.
+\item \textbf{Cas particuliers} : indiquer comment traiter les cas de renvois d’index (sans numéros de pages, mais renvoyant vers une autre entrée) et les entrées fragmentées sur plusieurs pages (ignorées pour simplifier cette première étude).
+\item \textbf{Instructions de formatage} : spécifier les règles de présentation des noms (prénom entre parenthèses après le nom de famille) et des références de pages.
 
+\end{itemize}
 Le prompt pourrait être encore amélioré en y intégrant davantage de contexte historique ou d’exemples représentatifs (\emph{few-shot prompting}).
 
 \subsection{Raffinement itératif du schéma et du prompt}
@@ -81,14 +85,14 @@ Cette section détaille le jeu de données obtenu, les variantes générées pou
 
 \subsection{Jeu de données}
 
-Les données de référence (\emph{ground truth}) ont été construites pour évaluer de manière rigoureuse la qualité d’extraction à différents niveaux de fidélité OCR. Pour chaque page sélectionnée, trois variantes distinctes issues du moteur OCR \textbf{PERO} \[8, 10, 11] ont été générées :
+Les données de référence (\emph{ground truth}) ont été construites pour évaluer de manière rigoureuse la qualité d’extraction à différents niveaux de fidélité OCR. Pour chaque page sélectionnée, trois variantes distinctes issues du moteur OCR \textbf{PERO} [8, 10, 11] ont été générées :
 
 \begin{enumerate}
 \item une version corrigée manuellement (or servant de standard de référence),
 \item une version basée sur une segmentation manuelle de la mise en page,
 \item une version brute, sans correction ni segmentation.
-\end{enumerate}
 
+\end{enumerate}
 Ce dispositif permet d’évaluer systématiquement la robustesse du pipeline face au bruit et aux artefacts de mise en page.
 
 Un échantillon aléatoire de cinq pages consécutives a été choisi pour transcription et annotation manuelles. Comme les entrées peuvent s’étendre sur plusieurs pages, certaines se retrouvent tronquées. Dans ces cas, le LLM a été explicitement instruit d’ignorer les éléments incomplets. Ce choix reflète les défis réalistes de l’extraction, où une prise en compte multi-pages (ou en flux continu) serait nécessaire en production, mais dépasse le cadre de cette étude.
@@ -101,49 +105,55 @@ L’évaluation porte sur \textbf{109 entrées réparties sur cinq pages}, chacu
 
 \subsection{Protocole d’évaluation des sorties structurées}
 
-L’objectif de l’évaluation est de comparer rigoureusement les sorties produites par le LLM (notées \$P\$) au \emph{ground truth} (noté \$G\$). Comme décrit en section 3.3, chaque instance de donnée correspond à une liste d’entrées, chacune constituée d’un nom d’orateur et d’une liste de pages référencées.
+L’objectif de l’évaluation est de comparer rigoureusement les sorties produites par le LLM (notées $P\$) au \emph{ground truth} (noté \$G$). Comme décrit en section 3.3, chaque instance de donnée correspond à une liste d’entrées, chacune constituée d’un nom d’orateur et d’une liste de pages référencées.
 
-Un défi majeur tient au fait que le modèle peut produire le bon ensemble d’entrées, mais dans un ordre différent, ou avec de légères variations structurelles. Pour résoudre cela, nous adoptons une stratégie d’alignement flexible inspirée de \[2, 7], utilisant le transport optimal pour établir une correspondance \emph{one-to-one} entre prédictions et référence. Cette approche neutralise la contrainte d’ordre et tolère des divergences mineures, permettant une évaluation robuste.
+Un défi majeur tient au fait que le modèle peut produire le bon ensemble d’entrées, mais dans un ordre différent, ou avec de légères variations structurelles. Pour résoudre cela, nous adoptons une stratégie d’alignement flexible inspirée de [2, 7], utilisant le transport optimal pour établir une correspondance \emph{one-to-one} entre prédictions et référence. Cette approche neutralise la contrainte d’ordre et tolère des divergences mineures, permettant une évaluation robuste.
 
-#### Distance au niveau des entrées et appariement optimal
+\subsubsection{Distance au niveau des entrées et appariement optimal}
 
-Pour comparer les entrées prédites et de référence, nous définissons une distance normalisée \$d\_e(g\_i, p\_j)\$ qui combine deux composantes :
+Pour comparer les entrées prédites et de référence, nous définissons une distance normalisée $d_e(g_i, p_j)$ qui combine deux composantes :
 
-* \textbf{Nom de l’orateur (texte)} : distance de Ratcliff/Obershelp (basée sur la plus longue sous-chaîne commune), après minuscule et suppression des espaces. La distance normalisée \$d\_n(g\_i, p\_j) \in \[0,1]\$ vaut 0 pour un match exact et 1 pour une dissimilarité totale.
+\begin{itemize}
+\item \textbf{Nom de l’orateur (texte)} : distance de Ratcliff/Obershelp (basée sur la plus longue sous-chaîne commune), après minuscule et suppression des espaces. La distance normalisée $d_n(g_i, p_j) \in [0,1]$ vaut 0 pour un match exact et 1 pour une dissimilarité totale.
 
-* \textbf{Pages référencées (ensembles)} : distance Intersection-over-Union (IoU) :
+\item \textbf{Pages référencées (ensembles)} : distance Intersection-over-Union (IoU) :
 
+\end{itemize}
 $$
 d_p(g_i, p_j) = 1 - \frac{|ref\_pages(g_i) \cap ref\_pages(p_j)|}{|ref\_pages(g_i) \cup ref\_pages(p_j)|}
 $$
 
-* \textbf{Distance d’entrée} :
+\begin{itemize}
+\item \textbf{Distance d’entrée} :
 
+\end{itemize}
 $$
 d_e(g_i, p_j) = d_n(g_i, p_j) \times d_p(g_i, p_j)
 $$
 
-Un appariement \emph{one-to-one} entre prédictions et vérité terrain est alors établi par transport optimal \[19], minimisant la distance totale et fournissant une base rigoureuse pour l’évaluation.
+Un appariement \emph{one-to-one} entre prédictions et vérité terrain est alors établi par transport optimal [19], minimisant la distance totale et fournissant une base rigoureuse pour l’évaluation.
 
-#### Limites des métriques classiques : précision, rappel et F1
+\subsubsection{Limites des métriques classiques : précision, rappel et F1}
 
 Les métriques usuelles (précision, rappel, F1) sont couramment utilisées pour évaluer les tâches d’extraction. Cependant, dans notre protocole, où les entrées sont alignées par transport optimal, elles deviennent trompeuses :
 
-* l’appariement injectif force une correspondance complète, ce qui maximise artificiellement la précision,
-* le rappel ne reflète pas les entrées manquantes ou ajoutées,
-* la F1 hérite de ces biais et surestime les performances.
+\begin{itemize}
+\item l’appariement injectif force une correspondance complète, ce qui maximise artificiellement la précision,
+\item le rappel ne reflète pas les entrées manquantes ou ajoutées,
+\item la F1 hérite de ces biais et surestime les performances.
 
-#### Integrated Matching Quality (IMQ) : une métrique robuste
+\end{itemize}
+\subsubsection{Integrated Matching Quality (IMQ) : une métrique robuste}
 
-Pour dépasser ces limites, nous exploitons directement la distance \$d\_e\$ pour définir un score de qualité \$q\_i = 1 - d\_e(g\_i, p\_i)\$, qui reflète la proximité entre une entrée prédite et sa référence.
+Pour dépasser ces limites, nous exploitons directement la distance $d_e\$ pour définir un score de qualité \$q_i = 1 - d_e(g_i, p_i)$, qui reflète la proximité entre une entrée prédite et sa référence.
 
-Plutôt que de fixer un seuil arbitraire pour décider du « bon » appariement, nous calculons la proportion de correspondances de qualité supérieure à un seuil \$t\$, puis intégrons sur tout l’intervalle $\[0,1]\$ :
+Plutôt que de fixer un seuil arbitraire pour décider du « bon » appariement, nous calculons la proportion de correspondances de qualité supérieure à un seuil $t\$, puis intégrons sur tout l’intervalle $[0,1]$ :
 
 $$
 IMQ = \int_0^1 F(t) \, dt
 $$
 
-où \$F(t)\$ est la fraction des correspondances de qualité \$q\_i \geq t\$.
+où $F(t)\$ est la fraction des correspondances de qualité \$q_i \geq t$.
 
 L’IMQ résume ainsi la qualité globale des appariements, récompensant à la fois leur nombre et leur proximité. Un score de 1 indique un alignement parfait. Cette métrique continue, indépendante de seuils arbitraires, est particulièrement adaptée aux sorties LLM, où de légères divergences sont fréquentes même sous fortes contraintes structurelles.
 
@@ -165,12 +175,14 @@ L’\textbf{IMQ}, en revanche, fournit une évaluation plus fine, en capturant l
 
 \subsection{Variations entre pages}
 
-\emph{ \textbf{Pages 5 et 10} : IMQ plus bas, lié à des incohérences typographiques. De nombreux prénoms n’y sont pas mis entre parenthèses après le nom, contrairement à l’attendu dans le }ground truth* (21 % des entrées sur la page 5, 39 % sur la page 10). Cela augmente artificiellement la distance textuelle et dégrade la qualité perçue des correspondances.
+\emph{ \textbf{Pages 5 et 10} : IMQ plus bas, lié à des incohérences typographiques. De nombreux prénoms n’y sont pas mis entre parenthèses après le nom, contrairement à l’attendu dans le }ground truth* (21 \% des entrées sur la page 5, 39 \% sur la page 10). Cela augmente artificiellement la distance textuelle et dégrade la qualité perçue des correspondances.
 
-* \textbf{Page 3} : malgré une précision/rappel parfaits, IMQ plus faible (0.8928), dû à des problèmes OCR causés par un pli dans la reliure, générant du bruit visuel.
+\begin{itemize}
+\item \textbf{Page 3} : malgré une précision/rappel parfaits, IMQ plus faible (0.8928), dû à des problèmes OCR causés par un pli dans la reliure, générant du bruit visuel.
 
-* \textbf{Page 2} : IMQ élevé (0.9059) malgré un rappel imparfait. Cela s’explique par un biais d’échantillonnage : le prompt avait été calibré sur cette page, ce qui améliore artificiellement la performance. Toutefois, les résultats solides sur la page 4 (IMQ = 0.9591) confirment la robustesse du dispositif.
+\item \textbf{Page 2} : IMQ élevé (0.9059) malgré un rappel imparfait. Cela s’explique par un biais d’échantillonnage : le prompt avait été calibré sur cette page, ce qui améliore artificiellement la performance. Toutefois, les résultats solides sur la page 4 (IMQ = 0.9591) confirment la robustesse du dispositif.
 
+\end{itemize}
 Un cas particulier : sur la page 2, une personne est mentionnée deux fois (comme sénateur et comme ministre). Le \emph{ground truth} distingue ces deux entrées, tandis que le LLM les fusionne. Cela réduit artificiellement le rappel mais correspond à une rationalisation fonctionnelle du modèle.
 
 \subsection{Comparaison avec OCR « parfait »}
@@ -191,10 +203,12 @@ Cela montre que la performance dépend non seulement du LLM, mais aussi de l’a
 
 \subsection{Enseignements}
 
-* Le prompt apparaît comme un paramètre critique : certains écarts ne sont pas liés au modèle, mais aux instructions données.
-* Un schéma de granularité raisonnable, couplé à un prompt générique, permet d’obtenir des résultats fiables sans nécessiter une connaissance « atomique » des spécificités documentaires.
-* L’analyse statistique page par page révèle des indices sur les exceptions structurelles internes aux documents (choix typographiques ou institutionnels), qui peuvent être significatives pour l’historien.
+\begin{itemize}
+\item Le prompt apparaît comme un paramètre critique : certains écarts ne sont pas liés au modèle, mais aux instructions données.
+\item Un schéma de granularité raisonnable, couplé à un prompt générique, permet d’obtenir des résultats fiables sans nécessiter une connaissance « atomique » des spécificités documentaires.
+\item L’analyse statistique page par page révèle des indices sur les exceptions structurelles internes aux documents (choix typographiques ou institutionnels), qui peuvent être significatives pour l’historien.
 
+\end{itemize}
 \section{Conclusion}
 
 Ce travail a exploré l’utilisation des grands modèles de langage pour la génération de données structurées à partir de sources historiques, à travers une étude de cas centrée sur les \emph{Tables nominatives} du Sénat français de 1931. L’approche — combinant OCR, structuration guidée par schéma et génération contrainte via LLM — a produit des résultats évalués grâce à une métrique plus adaptée, l’\textbf{IMQ}, intégrée dans un protocole d’alignement optimal reliant données de référence et données prédites.
@@ -203,10 +217,12 @@ L’introduction de la métrique IMQ s’est révélée essentielle : elle perme
 
 Plusieurs pistes s’ouvrent pour renforcer la robustesse et la généralisation de l’approche :
 
-* \textbf{Relier plus directement données extraites et questions de recherche} : il s’agit d’assurer que les hypothèses de réponse formulées à partir des données générées restent robustes dans le temps.
-* \textbf{Évaluer le prompt lui-même} : cette étape reste à formaliser pour parvenir à un protocole d’évaluation véritablement complet.
-* \textbf{Repenser la structuration de données} : elle ne doit pas être considérée comme un simple prétraitement neutre, mais comme un choix déterminant pour les analyses historiques possibles.
+\begin{itemize}
+\item \textbf{Relier plus directement données extraites et questions de recherche} : il s’agit d’assurer que les hypothèses de réponse formulées à partir des données générées restent robustes dans le temps.
+\item \textbf{Évaluer le prompt lui-même} : cette étape reste à formaliser pour parvenir à un protocole d’évaluation véritablement complet.
+\item \textbf{Repenser la structuration de données} : elle ne doit pas être considérée comme un simple prétraitement neutre, mais comme un choix déterminant pour les analyses historiques possibles.
 
+\end{itemize}
 De ce point de vue, le prompt et le schéma de données apparaissent comme des \textbf{méta-paramètres} du système de production de données historiques. Leur génération et leur ajustement doivent être conçus comme faisant partie intégrante de la chaîne de traitement.
 
 Une voie prometteuse consiste à \textbf{systématiser et automatiser ce processus de méta-optimisation}, afin de rendre ces approches reproductibles, transparentes et accessibles à des utilisateurs non spécialistes.

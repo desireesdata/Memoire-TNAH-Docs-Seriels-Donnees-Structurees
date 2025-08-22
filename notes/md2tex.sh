@@ -22,10 +22,10 @@ cp "$FICHIER" "$FICHIER.bak"
 cp "$FICHIER" "$SORTIE"
 
 ############################################
-# 1) Blockquotes imbriquees -> quote/encadre
+# 1) Blockquotes imbriquées -> quote/encadre
 #    - '>' niveau 1 -> quote
 #    - '>>' ou '> >' (niveau >=2) -> encadre
-#    - garde maths $$...$$, lignes vides, listes a l'interieur
+#    - garde maths $$...$$, lignes vides, listes à l'intérieur
 ############################################
 awk '
 BEGIN { cur=0; inmath=0 }
@@ -45,7 +45,7 @@ function ends_math(l){ return (l ~ /\$\$[[:space:]]*$/ || l ~ /\\\][[:space:]]*$
 {
   # si on est dans un bloc de citation ET dans un bloc math, on laisse tout dedans
   if (cur>0 && inmath==1){
-    # retire encore un eventuel prefixe de citations dans les lignes math internes
+    # retire encore un éventuel préfixe de citations dans les lignes math internes
     m2 = match($0, /^[[:space:]]*((>[[:space:]]*)+)/)
     if (m2){
       line2 = substr($0, RLENGTH+1)
@@ -58,7 +58,7 @@ function ends_math(l){ return (l ~ /\$\$[[:space:]]*$/ || l ~ /\\\][[:space:]]*$
     next
   }
 
-  # prefixe de citations: espaces + (">" + espaces) repetes
+  # prefixe de citations: espaces + (">" + espaces) répétés
   m = match($0, /^[[:space:]]*((>[[:space:]]*)+)/)
   if (m){
     prefix = substr($0, 1, RLENGTH)
@@ -78,7 +78,7 @@ function ends_math(l){ return (l ~ /\$\$[[:space:]]*$/ || l ~ /\\\][[:space:]]*$
     next
   }
 
-  # ligne sans ">" mais on est dans un bloc : cas a tolerer
+  # ligne sans ">" mais on est dans un bloc : cas à tolérer
   if (cur>0){
     if ($0 ~ /^[[:space:]]*$/) { print ""; next }                              # vide
     if ($0 ~ /^[[:space:]]*\\qquad/) { print $0; next }                         # \qquad
@@ -123,13 +123,15 @@ sed -i -E 's/\*([^*]+)\*/\\emph{\1}/g' "$SORTIE"
 ############################################
 # [texte](https://...) -> \href{url}{texte}
 sed -i -E 's/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/\\href{\2}{\1}/g' "$SORTIE"
+
 # URLs nues -> \url{...}
 sed -i -E 's#(^|[^\\{])((https?|ftp)://[^\s\}]+)#\1\\url{\2}#g' "$SORTIE"
 # 4.2) Pourcentages en texte : "0 %" -> "0 \%"
 sed -i -E 's/([0-9]) %/\1 \\%/g' "$SORTIE"
 
+
 ############################################
-# 5) Listes Markdown -> LaTeX (gere lignes vides)
+# 5) Listes Markdown -> LaTeX (gère lignes vides)
 ############################################
 awk '
 BEGIN { in_ul=0; in_ol=0 }
@@ -145,21 +147,29 @@ function close_all(){
     print
     next
   }
-  # numerotees 1. ou 1)
+  # numérotées 1. ou 1)
   if ($0 ~ /^[[:space:]]*[0-9]+[.)][[:space:]]+/) {
     if (!in_ol){ close_all(); print "\\begin{enumerate}"; in_ol=1 }
     sub(/^[[:space:]]*[0-9]+[.)][[:space:]]+/, "\\item ")
     print
     next
   }
-  # ligne vide a l interieur d une liste : on la garde
+  # ligne vide à l intérieur d une liste : on la garde
   if (($0 ~ /^[[:space:]]*$/) && (in_ul || in_ol)) { print ""; next }
+
   # fin de liste
   if (in_ul || in_ol) { close_all() }
+
   print
 }
 END { close_all() }
 ' "$SORTIE" > "${SORTIE}.tmp" && mv "${SORTIE}.tmp" "$SORTIE"
+
+############################################
+# 6.3) Citations Markdown [@clé] -> \footcite[][]{clé}
+############################################
+sed -i -E 's/\[@([A-Za-z0-9_:-]+)\]/\\footcite[][]{\1}/g' "$SORTIE"
+
 
 ############################################
 # 6) Images Markdown -> figure LaTeX
@@ -168,101 +178,14 @@ END { close_all() }
 ############################################
 # ![alt](path/name.ext)
 sed -i -E 's/!\[([^]]*)\]\(([^) ]*\/)?([^) \/]+)(\.[A-Za-z0-9]+)( "[^"]*")?\)/\\begin{figure}[htbp]\n\\centering\n\\includegraphics[width=\\linewidth]{\3\4}\n\\caption{\1}\n\\label{fig:\3}\n\\end{figure}/g' "$SORTIE"
+
 # ![](path/name.ext) -> includegraphics simple
 sed -i -E 's/!\[\]\(([^) ]*\/)?([^) \/]+(\.[A-Za-z0-9]+))( "[^"]*")?\)/\\noindent\\includegraphics[width=\\linewidth]{\2}/g' "$SORTIE"
 
-############################################
-# 6.3) Citations Markdown -> \footcite (biblatex)
-#   [@key]                 -> \footcite[][]{key}
-#   [@key, note]          -> \footcite[][note]{key}
-#   [text @key]           -> \footcite[text][]{key}
-#   [text @key, note]     -> \footcite[text][note]{key}
-############################################
-############################################
-# Citations Markdown -> \footcite (biblatex)
-#   [@key]                 -> \footcite[][]{key}
-#   [@key, note]          -> \footcite[][note]{key}
-#   [text @key]           -> \footcite[text][]{key}
-#   [text @key, note]     -> \footcite[text][note]{key}
-############################################
-# [texte @cle, note] -> \footcite[texte][note]{cle}
-# [texte @cle, note] -> \footcite[texte][note]{cle}
-sed -i -E 's#\[([^@\]]*)[[:space:]]*@[[:space:]]*([A-Za-z0-9_.:-]+)[[:space:]]*,[[:space:]]*([^]]+)\]#\\footcite[\1][\3]{\2}#g' "$SORTIE"
-
-# [@cle, note] -> \footcite[][note]{cle}
-sed -i -E 's#\[@[[:space:]]*([A-Za-z0-9_.:-]+)[[:space:]]*,[[:space:]]*([^]]+)\]#\\footcite[][\2]{\1}#g' "$SORTIE"
-
-# [texte @cle] -> \footcite[texte][]{cle}
-sed -i -E 's#\[([^@\]]*)[[:space:]]*@[[:space:]]*([A-Za-z0-9_.:-]+)\]#\\footcite[\1][]{\2}#g' "$SORTIE"
-
-# [@cle] -> \footcite[][]{cle}
-sed -i -E 's#\[@[[:space:]]*([A-Za-z0-9_.:-]+)\]#\\footcite[][]{\1}#g' "$SORTIE"
-
-############################################
-# 6.4) References de figures: @nom hors crochets -> \ref{fig:nom}
-############################################
-############################################
-# @nom -> \ref{fig:nom} (hors crochets seulement)
-############################################
-############################################
-# 6.4) Références de figures: @nom hors crochets -> \ref{fig:nom}
-# (version POSIX awk, sans gensub)
-############################################
-awk '
-{
-  s = $0
-  out = ""
-  depth = 0
-  i = 1
-  L = length(s)
-  while (i <= L) {
-    c = substr(s, i, 1)
-
-    # suivi du niveau de crochets [...]
-    if (c == "[") { depth++ ; out = out c ; i++ ; continue }
-    if (c == "]" && depth > 0) { depth-- ; out = out c ; i++ ; continue }
-
-    # si hors crochets et on voit un @, tente de capturer la clé
-    if (depth == 0 && c == "@") {
-      j = i + 1
-      key = ""
-      while (j <= L) {
-        ch = substr(s, j, 1)
-        if (ch ~ /[A-Za-z0-9_-]/) { key = key ch ; j++ } else { break }
-      }
-      if (length(key) > 0) {
-        out = out "\\ref{fig:" key "}"
-        i = j
-        continue
-      }
-      # sinon, pas une clé: on laisse le @ tel quel
-    }
-
-    out = out c
-    i++
-  }
-  print out
-}
-' "$SORTIE" > "${SORTIE}.tmp" && mv "${SORTIE}.tmp" "$SORTIE"
+# @nom -> \ref{fig:nom}
+sed -i -E 's/@([A-Za-z0-9_-]+)/\\ref{fig:\1}/g' "$SORTIE"
 
 
-############################################
-# 6.5) Maths inline ecrites comme \$...\$ et indices \_
-############################################
-# \$...$ -> $...$
-sed -i -E 's/\\\$(.*?)\\\$/\$\1\$/g' "$SORTIE"
-# Dans les segments math $...$, convertir \_ -> _ uniquement a l interieur
-awk '{
-  out=""; 
-  n = split($0, a, /\$/);
-  for (i=1; i<=n; i++){
-    seg = a[i];
-    if (i % 2 == 0) { gsub(/\\_/, "_", seg) }  # pairs = dans $...$
-    out = out seg;
-    if (i < n) out = out "$";
-  }
-  print out;
-}' "$SORTIE" > "${SORTIE}.tmp" && mv "${SORTIE}.tmp" "$SORTIE"
 
 ############################################
 # 7) Nettoyages / cas Markdown -> LaTeX
@@ -274,3 +197,4 @@ sed -i -E 's/\\\[([0-9]+[[:space:]]*[-–—][[:space:]]*[0-9]+)\]/[\1]/g' "$SOR
 
 echo "Conversion terminee : $SORTIE"
 echo "Sauvegarde originale : $FICHIER.bak"
+

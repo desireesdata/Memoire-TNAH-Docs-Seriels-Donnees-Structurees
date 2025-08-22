@@ -12,6 +12,13 @@
 \usepackage{polyglossia}
 \usepackage{epigraph}
 \usepackage{graphicx}
+\graphicspath{
+	{img/}             
+	{partie_1/img/}
+	{partie_2/img/}    
+	{partie_3/img/}
+	{sources/img/}
+}
 \usepackage{marginnote}
 \setmainlanguage{french}%indiquer la langue principale du document
 %\setotherlanguage{} %indiquer les autres langues utilisée
@@ -22,8 +29,13 @@
 \usepackage{csquotes} % les guillemets français
 \usepackage{lettrine} %faire une lettrine (pas obligatoire)
 
+
+\makeatletter
+\def\blx@bbxfile@enc{biblatex-enc/enc.bbx}
+\def\blx@cbxfile@enc{biblatex-enc/enc.cbx}
+\makeatother
 \usepackage[style=biblatex-enc/enc,sorting=nyt,maxbibnames=10]{biblatex}%charger le style de l'EnC (téléchargeable ici https://ctan.org/pkg/biblatex-enc)
-\addbibresource{} %le fichier bibliograhique. Exemple de chemin à partir du dossier où se trouve le document maître:Exemple ./dossierA/fichier.bib
+\addbibresource{sources/memoire.bib} %le fichier bibliograhique. Exemple de chemin à partir du dossier où se trouve le document maître:Exemple ./dossierA/fichier.bib
 %\defbibheading{}{\subsection*{}} Si l'on veut changer le titre de la/les bibliographie(s)
 
 
@@ -34,8 +46,7 @@
 
 
 %RAJOUTEZ ICI VOS PACKAGES
-
-
+\usepackage{amsmath}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CONFIGURATION DE MISE EN PAGE
@@ -147,8 +158,20 @@
 
 %%%%%%%%%%%%%%%%%% DÉFINITION DES COMMANDES ET ENVIRONNMENTS
 
+\usepackage{tcolorbox}
 
-
+\newtcolorbox{encadre}[1][]{%
+	colback=blue!5!white,
+	colframe=blue!75!black,
+	fonttitle=\bfseries,
+	title=Point technique,
+	arc=4pt,
+	left=6pt,
+	right=6pt,
+	top=6pt,
+	bottom=6pt,
+	fontupper=\fontsize{9}{10}\selectfont
+}
 
 
 
@@ -235,11 +258,34 @@
 Je remercie également mes parents ET SURTOUT DGETTO !!!
 	\newpage{\pagestyle{empty}\cleardoublepage}
 	
+
+%%%%%%%%%%%%%%%%%%%%%%%% BIBLIO, BIBLIOGRAPHIE %%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%% \bibliographie ici (normes de l'EnC)
-%\printbibliography
 
+\printbibheading[heading=bibintoc]
+\printbibliography[heading=subbibintoc,keyword=archivistique,title=Méthodologie historique]
+\printbibliography[heading=subbibintoc,keyword=parlementaire,title=Droit\, Histoire et Actualité Parlementaire]
+\printbibliography[heading=subbibintoc,keyword=pat,title=Institutions  et politiques patrimoniales]
+\printbibliography[heading=subbibintoc,keyword=hn,title=Humanités numériques]
+\printbibliography[heading=subbibintoc,keyword=Numérisation,title=Images et numérisation]
+\printbibliography[heading=subbibintoc,keyword=tal,title=Traitement automatique du langage]
+\printbibliography[heading=subbibintoc,keyword=archeologie,title=Philosophie de la technique et médialité]
+\printbibliography[heading=subbibintoc,keyword=maths,title=Mathématiques]
 
+%%%% réfs oubliées %%%%
 
+\printbibliography[
+heading=subbibintoc,
+notkeyword=archivistique,
+notkeyword=parlementaire,
+notkeyword=pat,
+notkeyword=hn,
+notkeyword=Numérisation,
+notkeyword=tal,
+notkeyword=archeologie,
+notkeyword=maths,
+title={Oublis}
+]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
