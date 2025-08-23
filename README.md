@@ -7,7 +7,9 @@ J'écris mes textes en markdown, avec l'éditeur *Marktext*. C'est plus commode 
 Voici mes scripts / regex qui convertissent mes .md en .tex :
 
 ```bash
-./md2tx.sh monfichier.md
+./md2tx.sh partie_2/01.md
+biber hub_master
+
 ```
 
 **Italiques**
