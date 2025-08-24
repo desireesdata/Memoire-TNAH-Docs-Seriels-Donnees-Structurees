@@ -1,4 +1,4 @@
-\chapter{La pipeline Corpusense}
+\chapter{L'outil Corpusense : une chaîne de traitement pour les sources historiques}
 
 L’outil Corpusense du projet Mezanno, dont l’ambition est de proposer aux chercheurs et chercheuses en sciences humaines et sociales (SHS) des environnements numériques adaptés à l’exploitation de corpus d’archives sérielles, volumineuses et souvent difficiles d’accès. Là où la partie précédente du mémoire a montré la diversité des enjeux liés à la numérisation et à la mise à disposition de ces sources — qualité parfois aléatoire de l’OCR, absence de structuration exploitable dans les textes bruts, masse de données qui rend toute saisie manuelle irréaliste — Corpusense vise à apporter une réponse technique et méthodologique cohérente.
 
@@ -32,7 +32,7 @@ La chaîne de traitement se déploie en plusieurs étapes successives :
 Le cas de la chercheuse qui a produit des données dans le cadre d'un atelier
 
 \end{quote}
-\subsection{Présentation de l'outil appliqué aux tables}
+\subsection{Présentation de l'outil appliqué aux Tables}
 
 Montrer le fonctionnement
 
@@ -44,26 +44,45 @@ Mais, quel que soit le pipeline retenu, un enjeu central demeure : il s’agit d
 
 \section{Prise en main intuitive du problème}
 
-Un travail d'exploration technique a été fait. Une fois la tâche définie (éval de la sortie structurée). Prompts \enquote{natures}. Schémas. Regex.
-TED, donut, Métriqe de l'inégalité triangulaire.
+Le travail a commencé par une phase d’exploration technique, où l’enjeu était de s’approprier la tâche d’évaluation des sorties structurées produites par des modèles génératifs. Une fois la tâche définie — comparer une vérité terrain et les données générées — plusieurs pistes ont été testées. La plus immédiate consistait à employer des prompts « naturels », en laissant au modèle une certaine latitude d’interprétation, mais en les contraignant par des schémas formels afin de produire des objets comparables (par exemple en JSON). Dans un registre plus classique, des expressions régulières ont également été utilisées pour segmenter et contrôler les extractions. Ces premières expérimentations relevaient d’un bricolage méthodologique, fait d’essais et d’erreurs, mais elles ont permis de dégager des lignes de force.
+
+En pratique, différents outils ont été mobilisés. Des bibliothèques Python comme TED (Tree Edit Distance) ou Donut ont offert un premier socle de comparaison structurelle des objets générés. En parallèle, la construction de matrices de similarité à partir de distances de type Levenshtein a permis de visualiser les écarts entre la vérité terrain et la sortie du modèle. L’inégalité triangulaire, au cœur de la définition d’un espace métrique, a ainsi servi de point de repère théorique : il s’agissait moins d’aboutir à une véritable métrique que de se doter d’un plan de comparaison, pour observer comment les données générées « se rapprochent » ou « s’éloignent » de la référence.
 
 \section{Reflexions sur la notion de métrique à partir des matrice de similarité}
 
-Métricité.
+Dans les prolongements des premières expérimentations, j’ai été conduit à explorer de manière plus spéculative le statut des matrices de similarité utilisées pour comparer vérité terrain et sorties générées. La méthode d’appariement par transport optimal, bien qu’efficace, n’épuise pas la question. En manipulant ces matrices, il est apparu qu’elles ne constituaient pas nécessairement des espaces métriques au sens strict, car les propriétés classiques de symétrie, de séparation et surtout d’inégalité triangulaire ne sont pas toujours vérifiées. Pourtant, l’intuition demeure qu’il existe localement des zones où la métricité « émerge », c’est-à-dire où les correspondances entre vérité terrain et données produites se cristallisent sous une forme qui ressemble à un espace métrique.
+
+De cette intuition est née l’idée d’« archipels métriques ». Apparier deux ensembles distincts, c’est se confronter à un plan chaotique, où les correspondances sont partielles, bruitées, parfois trompeuses. Mais à l’intérieur de ce chaos, certaines régions se stabilisent : elles respectent suffisamment les critères de la métricité pour apparaître comme des sous-espaces cohérents. Chaque correspondance « réussie » se manifeste alors comme un îlot métrique, et l’ensemble des correspondances forme une sorte d’archipel. L’enjeu devient d’identifier ces zones stables, de les isoler et, peut-être, de mesurer le degré de relaxation nécessaire pour les faire apparaître.
+
+Cette approche implique de considérer la matrice de similarité non seulement comme un outil de visualisation, mais aussi comme un espace à part entière, doté d’une géométrie implicite. L’inégalité triangulaire, par exemple, peut être relâchée pour tolérer le bruit et les erreurs propres aux données générées. Plus le relâchement requis est faible, plus l’appariement correspond à une structure métrique robuste ; inversement, un relâchement trop important signale que la correspondance est artificielle. On passe ainsi d’une logique de mesure stricte à une logique de tropisme : la qualité d’un match ne se réduit pas à un score, elle se comprend comme une tendance à former ou non un espace métrique.
+
+Ces réflexions restent exploratoires et parfois naïves. Elles traduisent néanmoins une conviction : l’évaluation des sorties générées par des modèles ne consiste pas seulement à comparer des chaînes de caractères ou à aligner des structures JSON, mais à interroger les formes de cohérence qui émergent de ces alignements. La métaphore des archipels métriques permet de rendre sensible cette idée : dans un océan de dissemblances, il existe des zones de stabilité où les correspondances prennent consistance, et c’est dans ces zones que se joue la possibilité d’un appariement pertinent.
 
 \section{Design et vérité terrain}
 
-du problème de la vérité terrain, amender ses choix par rapport à la machine
+Un autre axe d’expérimentation a concerné la construction de la vérité terrain elle-même. En théorie, celle-ci joue le rôle de référence absolue, garante de la « vérité » des données. En pratique, elle est le produit de choix opérés par le chercheur. Un exemple emblématique est celui de Louis Barthou, sénateur et ministre de la guerre en 1931 : fallait-il créer une seule entrée regroupant ses différentes interventions, ou distinguer ses apparitions selon ses rôles ? Dans mon cas, j’ai choisi la seconde option, au nom du principe de prudence : ne pas présupposer qu’il n’existe pas d’homonymes dans le corpus, et donc conserver la granularité des entrées. Mais ce choix a eu des conséquences directes sur l’évaluation, le modèle ayant tendance à factoriser les occurrences.
+
+Ce type de situation montre que la vérité terrain n’est pas une donnée pure, mais un \textbf{design}. Elle peut être amendée, discutée, et parfois remise en cause par confrontation avec la machine. Le dialogue entre sorties générées et vérité terrain devient alors un lieu de négociation : la machine force à interroger les critères de segmentation, de répétition ou de fusion, et conduit à réévaluer des décisions éditoriales qui semblaient évidentes.
 
 \section{Le transport optimal}
 
-qdqsd
+our dépasser les limites des approches naïves, j’ai mobilisé le cadre du \textbf{transport optimal}, issu des travaux de Monge (1781) et de Kantorovitch (1942). Le problème est simple dans son principe : comment attribuer de façon optimale des éléments d’un ensemble à ceux d’un autre, en minimisant un coût global ? Appliqué à l’évaluation de sorties structurées, cela revient à chercher la permutation la plus économique entre les éléments de la vérité terrain et ceux produits par le modèle
 
 \section{La topologie appliquée aux données}
 
-Expérimentation théoriques inabouties, mais intéressante pour l'entrainement
+Un dernier axe d’exploration a consisté à interroger la « forme » des données produites par les modèles. Jusqu’ici, l’évaluation reposait sur des comparaisons locales — appariements ponctuels entre vérité terrain et sorties générées — ou sur des instruments d’optimisation comme le transport optimal. Mais que se passe-t-il si l’on déplace la focale pour s’intéresser à la configuration globale des données ? Ont-elles une apparence reconnaissable, une cohérence de forme qui persiste malgré le bruit et les pertes introduites par la chaîne de traitement ?
 
+Cette interrogation m’a conduit à explorer le champ de la \textbf{Topological Data Analysis (TDA)}, qui propose d’extraire des signatures invariantes des données à partir de leur structure de connexité. L’idée est de transformer les données en nuages de points, puis de suivre au fur et à mesure l’apparition et la disparition de relations, de boucles et de cavités, pour dégager une « empreinte » topologique. Ces empreintes sont décrites à l’aide de diagrammes de persistance et de nombres de Betti, qui traduisent respectivement la naissance et la mort de structures (composantes connexes, cycles, cavités) et leur importance relative.
 
+Appliquée au cas des Tables du Sénat, cette approche consiste à traduire les objets JSON (vérité terrain et prédictions du LLM) en matrices de similarité tautologiques, puis en matrices de distances. Chaque donnée devient alors un point, et l’on peut observer comment ces points fusionnent au fur et à mesure qu’on augmente un paramètre de connexion. Dans les données de vérité terrain, la progression suit une dynamique régulière : les points s’agrègent progressivement en groupes, puis en une structure compacte. Dans les données prédites, la dynamique est comparable, mais l’on observe davantage de « composantes » initiales, témoignant d’hallucinations du modèle.
+
+Les \textbf{courbes de Betti} permettent de visualiser cette évolution : elles montrent que la structure prédite suit globalement le rythme de la vérité terrain, même si des divergences apparaissent. Pour en rendre compte plus finement, j’ai eu recours à la \textbf{Dynamic Time Warping (DTW)}, un algorithme de comparaison de séquences qui tolère des décalages de rythme. Cette méthode permet de mesurer la proximité des trajectoires topologiques des deux ensembles, en produisant un score de similarité compris entre 0 et 1. Dans mon cas, la similarité entre vérité terrain et données générées avoisinait 95 \%, tandis qu’elle tombait à 14 \% pour un ensemble bruité, ce qui en fait ne confirme pas l’intérêt heuristique de la démarche puisque les métriques ne sont pas convergente. Des bons résultats sont moins des preuves de la concordance des données qu'un mobile qui \enquote{pousse} des jeux de données à se ressembler.
+
+Cette expérimentation ne prétend pas fournir une métrique décisive. La topologie appliquée aux données doit plutôt être comprise comme un \textbf{outil de diagnostic}, complémentaire des approches locales. Elle offre une vue d’ensemble, un paysage global de la « tête » des données, qui aide à détecter des décalages structurels invisibles à une échelle ponctuelle. En contexte patrimonial ou documentaire, où la robustesse de la structuration et l’intégrité informationnelle sont essentielles, cette dimension peut enrichir l’évaluation, en apportant des indices qualitatifs sur la cohérence ou l’érosion de la forme des données au fil des transformations.
+
+En définitive, cette piste reste exploratoire, mais elle ouvre des perspectives stimulantes : appliquer la TDA non seulement à des données tabulaires ou arborescentes, mais aussi à des représentations sémantiques (embeddings), afin d’évaluer si les opérations de normalisation ou de conversion conservent les régularités topologiques des corpus. Ce serait une manière de répondre à une question fondamentale : qu’est-ce qui persiste, et qu’est-ce qui se perd, lorsque l’on passe de la vérité terrain à la donnée prédite ?
+
+En définitive, cette piste topologique doit être considérée comme une expérimentation récréative : elle n’a pas produit de résultats directement exploitables, mais elle a eu une vertu heuristique importante. Elle m’a conduit à revenir sur l’algorithme de \textbf{Dynamic Time Warping (DTW)}, non plus seulement comme un outil de comparaison de courbes topologiques, mais comme un instrument susceptible d’articuler la dimension séquentielle des données avec la distance de Levenshtein. En effet, si la distance de Levenshtein capture le coût minimal des opérations nécessaires pour transformer une chaîne en une autre, elle ne prend pas en compte le rythme ni la dynamique de ces transformations. La DTW, au contraire, permet de comparer des séquences qui ne sont pas parfaitement alignées, en tolérant des décalages ou des variations de vitesse. En croisant ces deux approches, on pourrait donc envisager un dispositif capable de mesurer la qualité d’un appariement à la fois sur le plan des opérations locales et sur celui de la cohérence temporelle globale.
 
 \chapter{Livrable : une métrique et un article}
 
