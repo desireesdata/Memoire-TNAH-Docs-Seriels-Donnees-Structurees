@@ -1,8 +1,8 @@
 \chapter{L'outil Corpusense : une chaîne de traitement pour les sources historiques}
 
-L’outil \emph{Corpusense} du projet Mezanno a pour ambition de proposer aux chercheurs et chercheuses en sciences humaines et sociales (SHS) un dispositif dédié à l’exploitation de corpus d’archives sérielles. Là où la partie précédente du mémoire a montré la diversité des enjeux liés à la numérisation et à la mise à disposition de ces sources — qualité imparfaite de l’OCR, absence de structuration exploitable dans les textes bruts, masse de données qui rend toute saisie manuelle irréaliste — \emph{Corpusense} vise à apporter une réponse technique réaliste. \enquote{Réaliste}, car il s’appuie pour cela sur des briques logicielles déjà disponibles et rapides à mettre en place, qu’il agence en une chaîne cohérente correspondant au schème opératoire transcriptif défini précédemment, allant de la source numérisée à la donnée structurée.
+L’outil \emph{Corpusense} du projet Mezanno a pour ambition de proposer aux chercheurs et chercheuses en sciences humaines et sociales un dispositif dédié à l’exploitation de corpus d’archives sérielles. Là où la partie précédente du mémoire a montré la diversité des enjeux liés à la numérisation et à la mise à disposition de ces sources — qualité imparfaite de l’OCR, absence de structuration exploitable dans les textes bruts, masse de données qui rend toute saisie manuelle irréaliste — \emph{Corpusense} vise à apporter une réponse technique réaliste. \enquote{Réaliste}, car il s’appuie pour cela sur des briques logicielles déjà disponibles et rapides à mettre en place, qu’il agence en une chaîne cohérente correspondant au schème opératoire transcriptif défini précédemment, allant de la source numérisée à la donnée structurée.
 
-Le fonctionnement de \emph{Corpusense} repose principalement sur l’usage d’\textbf{API} (\emph{Application Programming Interface}), c’est-à-dire d’interfaces de programmation qui permettent à des logiciels hétérogènes de communiquer entre eux en suivant un protocole défini. Plutôt que de réimplémenter des modules complexes, l’outil tire parti de services spécialisés en les appelant directement via leurs API. Trois d’entre elles structurent le dispositif : \textbf{IIIF} (International Image Interoperability Framework), standard largement adopté par les institutions patrimoniales, qui permet de charger et manipuler des images numérisées de manière normalisée ; une API du moteur \textbf{Pero OCR}, développé par l’université de Prague, qui fournit une reconnaissance optique des caractères adaptée aux corpus historiques et multilingues ; et enfin l’API de \textbf{Mistral}, un modèle de langage, mobilisée pour transformer les textes OCRisés en sorties structurées adaptées aux besoins des chercheurs (voir \ref{fig:corpusense}). Ainsi, il s'agit de reconstituer une chaîne opératoire, composé de différentes briques, qui sont agencés de manière à les solidariser de sorte à fournir un outil. 
+Le fonctionnement de \emph{Corpusense} repose principalement sur l’usage d’\textbf{API}, c’est-à-dire d’interfaces de programmation qui permettent à des logiciels hétérogènes de communiquer entre eux en suivant un protocole défini. Les API fonctionnent comme des guichets d'information qui délivrent, selon les requêtes, des données demandées, par exemple une série d'images et leurs métadonnées dans le cas de \textbf{IIIF}. Plutôt que de réimplémenter des modules complexes, l’outil tire parti de services spécialisés en les appelant directement via leurs API. Trois d’entre elles structurent le dispositif : IIIF, donc, qui est le standard largement adopté par les institutions patrimoniales, qui permet de charger et manipuler des images numérisées de manière normalisée. Il faut compter également une \enquote{APIsation} du moteur \textbf{Pero OCR} par l'EPITA; qui fournit comme on l'a vu une reconnaissance optique des caractères adaptée aux corpus historiques et multilingues. Et, enfin, l’API de \textbf{Mistral}, un modèle de langage, mobilisée pour transformer les textes OCRisés en sorties structurées adaptées aux besoins des chercheurs (voir \ref{fig:corpusense}). Ainsi, il s'agit de reconstituer une chaîne opératoire, composé de différentes briques agencées et constituées en outil.
 
 \begin{figure}[htbp]
 \centering
@@ -17,7 +17,7 @@ L'outil motive donc une double orientation. D’une part, il repose sur une cha�
 
 \subsection{L'implémentation du schème opératoire}
 
-L’objectif de Corpusense veut fournir une infrastructure technique robuste pour automatiser les étapes critiques (constitution des corpus, OCR, extraction) \ref{fig:pipieline_mezz}.
+L’objectif de Corpusense veut fournir une infrastructure technique robuste pour solidariser les différents rouages (à savoir la constitution des corpus, OCR, extraction) \ref{fig:pipieline_mezz}.
 
 \begin{figure}[htbp]
 \centering
@@ -26,37 +26,34 @@ L’objectif de Corpusense veut fournir une infrastructure technique robuste pou
 \label{fig:pipieline_mezz}
 \end{figure}
 
-La chaîne de traitement se déploie en plusieurs étapes successives :
+La chaîne de traitement se déploie en plusieurs étapes successives. Tout d'abord, la sélection et organisation des sources. Le point de départ réside dans la constitution du corpus. Celui-ci peut provenir de fonds institutionnels (par exemple Gallica, la BnF ou des archives universitaires), ou de collections numérisées indépendantes. Les documents, le plus souvent disponibles sous forme d’images, sont alors recensés et organisés dans un format exploitable. Dans ce contexte, \emph{Corpusense} s’appuie sur le protocole IIIF, largement adopté dans le domaine patrimonial. IIIF permet non seulement d’accéder aux images numérisées de manière normalisée, mais aussi de les manipuler (zoomer, rogner, annoter) et de les intégrer de façon homogène, quelle que soit l’institution d’origine. Ce recours à un standard interopérable assure la portabilité des corpus et facilite leur exploitation au-delà du cadre spécifique de ce projet. 
 
-\begin{enumerate}
-\item \textbf{Sélection et organisation des sources}  
-\end{enumerate}
-   Le point de départ réside dans la constitution du corpus. Celui-ci peut provenir de fonds institutionnels (par exemple Gallica, la BnF ou des archives universitaires), ou de collections numérisées indépendantes. Les documents, le plus souvent disponibles sous forme d’images, sont alors recensés et organisés dans un format exploitable. Dans ce contexte, \emph{Corpusense} s’appuie sur le protocole IIIF, largement adopté dans le domaine patrimonial. IIIF permet non seulement d’accéder aux images numérisées de manière normalisée, mais aussi de les manipuler (zoomer, rogner, annoter) et de les intégrer de façon homogène, quelle que soit l’institution d’origine. Ce recours à un standard interopérable assure la portabilité des corpus et facilite leur exploitation au-delà du cadre spécifique de ce projet.
+Ensuite, la transcription par OCR. La deuxième étape consiste à convertir ces images en texte grâce à un moteur de reconnaissance optique de caractères (OCR). Corpusense s’appuie principalement sur le moteur PERO OCR. 
 
-\begin{enumerate}
-\item \textbf{Transcription par OCR}  
-\end{enumerate}
-   La deuxième étape consiste à convertir ces images en texte grâce à un moteur de reconnaissance optique de caractères (OCR). Corpusense s’appuie principalement sur le moteur \textbf{PERO OCR}, reconnu pour ses performances dans le traitement de documents patrimoniaux complexes
+Enfin, la sortie structurée (avec l'API Mistral), laquelle produit un document en JSON, qui peut d'ailleurs être converti aisément en format CSV.
 
-\begin{enumerate}
-\item Sortie structurée (API Mistral), laquelle produit un document en JSON. 
+Le choix du format JSON pour représenter les données structurées ne relève pas seulement de la contrainte imposée par l’API Mistral même si cette disponibilité oriente un tel choix. Ce format présente en fait plusieurs avantages décisifs dans le cadre d’un outil comme \emph{Corpusense}. D’un point de vue technique, JSON est un standard commun pour l’échange de données : léger, lisible par l’humain, directement exploitable par la plupart des langages de programmation et facilement convertible en d’autres formats, qu’il s’agisse de tables ou de bases de données relationnelles ou documentaires. Cette plasticité garantit la réutilisation des résultats, quel que soit l’environnement de recherche dans lequel ils sont ensuite mobilisés. L’intérêt du JSON réside dans l'implémentation de la dialectique clé/valeur, laquelle se prête particulièrement bien à des tâches \enquote{indexatoires}, davantage convenante à la logique tabulaire, plus rigide. Là où un tableau, par exemple au format CSV, oblige à « aplatir » l’information, JSON permet de conserver les relations entre entités (par exemple entre un intervenant et les différentes pages où il est cité) et d’accueillir des variations de granularité sans perdre la cohérence du tout. Par exemple, chaque sénateur peut intervenir un certain nombre de fois : en JSON, chaque référence d'intervention est un élément manipulable, distinct des autres; et l'ensemble de ces références est une liste de taille variable. Dans un tableau, on pourrait soit agréger ces différentes références dans une unique colonne séparés avec un séparateur arbitraire \ref{fig:comparaison} -- impliquant alors de parser \emph{a posteriori} ces séries de nombres -- ou bien, mais c'est ici une option assez malheureuse, de constituer autant de colonnes que d'interventions. La séparation des valeurs en JSON fait partie de sa grammaire quand, côté tables, la séparation de valeurs numériques est en fait une chaînes de caractères qu'il faut \enquote{spliter} pour retomber sur une certaine modularité.
 
-\end{enumerate}
-Le choix du format JSON pour représenter les données structurées ne relève pas seulement de la contrainte imposée par l’API Mistral même si cette contrainte pèse. Ce format présente en fait plusieurs avantages décisifs dans le cadre d’un outil comme \emph{Corpusense}. D’un point de vue technique, JSON est aujourd’hui un standard universel pour l’échange de données : léger, lisible par l’humain, directement exploitable par la plupart des langages de programmation et facilement convertible en d’autres formats, qu’il s’agisse de tables (CSV) ou de bases de données relationnelles ou documentaires. Cette plasticité garantit la réutilisation des résultats, quel que soit l’environnement de recherche dans lequel ils sont ensuite mobilisés.
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{comparaison.png}
+\caption{Comparaison}
+\label{fig:comparaison}
+\end{figure}
 
-Mais l’intérêt de JSON va au-delà de cette interopérabilité. Son organisation hiérarchique (nœuds, paires clé/valeur, listes imbriquées) se prête particulièrement bien à la structuration de données historiques ou patrimoniales, qui ne suivent pas toujours une logique strictement tabulaire. Là où un CSV oblige à « aplatir » l’information, JSON permet de conserver les relations entre entités (par exemple entre un intervenant et les différentes pages où il est cité) et d’accueillir des variations de granularité sans perdre la cohérence du tout. Il est ainsi possible de représenter des cas simples ou complexes au sein d’un même corpus, ce qui correspond mieux à la réalité hétérogène des archives numérisées.
+Il est ainsi possible de représenter des cas simples ou complexes au sein d’un même corpus, ce qui correspond mieux à la réalité hétérogène des archives numérisées. A ce stade, on remarque une difficulté pour l'historien qui mobilise des données structurées. Dans une démarche outillée, par exemple avec l'outil \emph{Corpusense}, elle résiderait peut-être moins dans la capacité à programmer qu'à envisager la forme des données, qu'à modéliser un problème ou un ensemble de faits. Cet exercice n’est pas trivial : veut-on décrire des entités et leurs attributs, suivre leur activité dans le temps, ou cartographier leurs relations ? Chacun de ces choix renvoie à des modèles de données distincts, et donc à des manières différentes de faire parler les sources. L'outil ne fait pas disparaître les problématiques de modélisation des données. On retrouve ici la notion de \emph{valuation} au sens deweyien : les moyens de l’enquête — ici, la forme des données et les dispositifs techniques qui les produisent — dépendent des fins poursuivies, mais ces fins elles-mêmes ne sont jamais figées. Elles peuvent être révisées, ajustées ou enrichies au fil des expérimentations, en fonction de ce que les données rendent possible ou non. En ce sens, modéliser les données revient parfois à réactiver, au présent, des gestes interprétatifs analogues à ceux que Collingwood décrivait sous le terme de \emph{reenactment} : l’historien ne fait pas que collecter des informations, il rejoue l’acte de pensée, reconstruit les problèmes tels qu’ils se posaient aux acteurs du passé, mais à travers des médiations techniques. L’historien n’a donc pas affaire à une simple « conversion numérique » de sa pratique, mais bien à une reconfiguration de ses schèmes interprétatifs sous l’effet des opérations techniques. Dans cette perspective, parler de « numérisation du métier d’historien » \footcite[][]{poublanc} ne désigne pas seulement une facilitation instrumentale par les outils numériques : cela renvoie à l’intégration de nouveaux schèmes techniques dans l’enquête elle-même, qui orientent la manière de modéliser les mots et les faits. L’historien ne saurait être l'aliéné des dispositifs techniques — au sens où Simondon entend l’aliénation comme l’usage aveugle d’outils méconnus — mais participe au contraire à leur individuation, en les inscrivant consciemment dans son milieu de recherche et dans ses gestes interprétatifs. 
 
-
-
-\subsection{Présentation de l'outil appliqué aux Tables}
-
-Montrer le fonctionnement
+De plus, cette solidarisation des différentes briques techniques — de cette médiation technique pour constituer des questions et des réponses — ne fait pas disparaître la question de l’évaluation des données produites. Au contraire, elle la rend plus pressante. Car exploiter scientifiquement des données issues d’un assemblage \emph{abstrait} de techniques \emph{concrètes} — pour reprendre le vocabulaire de Gilbert Simondon — suppose de fonder une confiance raisonnée : confiance dans les outils choisis, dans la cohérence de la chaîne opératoire, mais aussi dans la capacité des chercheurs à expliciter les conditions de production des données qui alimentent leur analyse. Dans le cas d’une pipeline comme \emph{Corpusense}, on a affaire à un tel assemblage abstrait : une juxtaposition de fonctions spécialisées (OCR, segmentation, structuration), qui ne forment pas encore un objet intégré mais dont la coopération doit être évaluée comme un tout. Ce qui permet de fonder cette confiance est donc l’\emph{évaluation} de la chaîne de traitement, c’est-à-dire à la fois la performance de chaque module et la cohérence globale de l’ensemble.
 
 \subsection{Ateliers}
 
-Mais, quel que soit le pipeline retenu, un enjeu central demeure : il s’agit d’évaluer la confiance que l’on peut accorder aux données produites. La pertinence scientifique des analyses repose sur cette étape, qui ne se réduit pas à un simple contrôle technique mais engage une véritable réflexion méthodologique. Dans le cadre de mon stage, j’ai cherché à articuler trois dimensions souvent pensées séparément. L’expérimentation, d’abord, consiste à mettre à l’épreuve des solutions techniques sur des corpus réels, avec toute l’incertitude et la contingence que cela suppose. La valuation, ensuite, au sens pragmatiste que lui donne Dewey, désigne la formation progressive de valeurs et de critères de pertinence au fil de l’expérience. Enfin, l’évaluation, qui vient formaliser ces critères sous forme de métriques, permet de mesurer de manière transparente la qualité des résultats. Loin de s’opposer, ces trois démarches s’entrelacent : l’expérimentation nourrit la valuation en faisant émerger de nouveaux repères, la valuation oriente le choix des métriques pertinentes, et l’évaluation fournit en retour des points d’ancrage solides pour comparer et améliorer les pipelines. Ainsi, la question de la métrique ne va pas de soi : elle prend sens dans un processus itératif où techniques, valeurs et jugements scientifiques se co-construisent.
+Avant de passer à l’évaluation proprement dite, arrêtons-nous sur un cas concret qui illustre bien les difficultés rencontrées. Lors d’un atelier mené à l'EHESS par les développeurs de \emph{Corpusense}, une chercheuse — sans formation particulière en informatique — a expérimenté l’outil sur un corpus de la Quatrième République. En une demi-heure, elle a pu obtenir un jeu de données massif, comprenant plus de 1200 entités liées à l’activité parlementaire, plus précisemment sur la production de documents parlementaires. L’exercice montre à quel point la chaîne de traitement peut être efficace et accessible : un travail qui aurait pris des semaines en dépouillement manuel est désormais réalisable en un temps réduit.
+
+Mais cette réussite apparente masque plusieurs écueils. La chercheuse, tâche peu facile oblige, a eu du mal à définir précisément son modèle de données : quelles entités retenir ? quelles relations considérer comme pertinentes ? quelle granularité adopter ? Faut-il penser en terme d'acteurs ? De documents produits ? Il a fallu essayer différents modèles pour obtenir un résultat satisfaisant ; redéfinir clairement ce que l'on tenait à savoir sur la période étudiée. De plus, même si la structuration a fonctionné, la question centrale reste ouverte : les données ainsi produites sont-elles fiables ? Dans quelle mesure peut-on leur faire confiance pour alimenter une enquête historique, et non seulement une démonstration technique ? A l'issue de cet atelier, qui visait avant tout à expérimenter l'outil qu'à produire de véritables données pour une question de recherche déterminée, le besoin de savoir si les données était fiables était urgent.
 
 \chapter{Expérimentations}
+
+La pertinence scientifique des analyses repose sur l'évaluation, qui ne se réduit pas à un simple contrôle technique mais engage une véritable réflexion méthodologique. Dans le cadre de mon stage, j’ai cherché à articuler trois dimensions souvent pensées séparément. L’expérimentation, d’abord, consiste à mettre à l’épreuve des solutions techniques sur des corpus réels, avec toute l’incertitude et la contingence que cela suppose. La valuation, ensuite, au sens pragmatiste que lui donne Dewey, désigne la formation progressive de valeurs et de critères de pertinence au fil de l’expérience. Enfin, l’évaluation, qui vient formaliser ces critères sous forme de métriques, permet de mesurer de manière transparente la qualité des résultats. Loin de s’opposer, ces trois démarches s’entrelacent : l’expérimentation nourrit la valuation en faisant émerger de nouveaux repères, la valuation oriente le choix des métriques pertinentes, et l’évaluation fournit en retour des points d’ancrage solides pour comparer et améliorer les pipelines. Ainsi, la question de la métrique ne va pas de soi : elle prend sens dans un processus itératif où techniques, valeurs et jugements scientifiques se co-construisent.
 
 \section{Prise en main intuitive du problème}
 
@@ -319,3 +316,61 @@ Plusieurs pistes s’ouvrent pour renforcer la robustesse et la généralisation
 De ce point de vue, le prompt et le schéma de données apparaissent comme des \textbf{méta-paramètres} du système de production de données historiques. Leur génération et leur ajustement doivent être conçus comme faisant partie intégrante de la chaîne de traitement.
 
 Une voie prometteuse consiste à \textbf{systématiser et automatiser ce processus de méta-optimisation}, afin de rendre ces approches reproductibles, transparentes et accessibles à des utilisateurs non spécialistes.
+
+\begin{itemize}
+\item Brown et al. → `\footcite[][]{brown}`
+
+\item \footcite[][]{purentimeus}, \footcite[][]{poudra}, \footcite[][]{lamasse}, \footcite[][]{eugenedroitpol} \footcite[][]{saudrais} \footcite[][]{lemesle}, \footcite[][]{bonnard} \footcite[][]{coniez} \footcite[][]{morel} \footcite[][]{prost} \footcite[][]{coniez}
+
+\item \footcite[][]{dirjo} \footcite[][]{jo1931} \footcite[][]{rygiel} \footcite[][]{gardey} \footcite[][]{boutier} \footcite[][]{comete} \footcite[][]{chazalon}\footcite[][]{com}\footcite[][]{comm}
+
+\item Chen et al. → `\footcite[][]{chen}`
+
+\item Clavert & Muller → `\footcite[][]{clavertmuller}`
+
+\item Devlin et al. → `\footcite[][]{devlin}`
+
+\item Finkel, Grenager & Manning → `\footcite[][]{finkelmanning}`
+
+\item Humphries et al. → `\footcite[][]{humphries}`
+
+\item Kirillov et al. → `\footcite[][]{kirillov}`
+
+\item Kišš, Beneš & Hradiš → `\footcite[][]{kisshradis}`
+
+\item Knutsen → `\footcite[][]{knutsen}`
+
+\item Kodym & Hradiš → `\footcite[][]{kodymhradis}`
+
+\item Kohút & Hradiš → `\footcite[][]{kohuthradis}`
+
+\item Kojima et al. → `\footcite[][]{kojima}`
+
+\item Liu et al. → `\footcite[][]{liu}`
+
+\item de Marneffe et al. → `\footcite[][]{marneffe}`
+
+\item Mintz et al. → `\footcite[][]{mintz}`
+
+\item Mistral AI → `\footcite[][]{mistralai}`
+
+\item Morel → `\footcite[][]{morel}`
+
+\item Nadeau & Sekine → `\footcite[][]{nadeausekine}`
+
+\item Peyré & Cuturi → `\footcite[][]{peyre}`
+
+\item Radford et al. (2018) → `\footcite[][]{radford2018}`
+
+\item Radford et al. (2019) → `\footcite[][]{radford2019}`
+
+\item Wei et al. → `\footcite[][]{wei}`
+
+\item Willard & Louf → `\footcite[][]{willardlouf}`
+
+\item Yuan & Sester → `\footcite[][]{yuansester}`
+
+\item Zhang & Shasha → `\footcite[][]{zhangshasha}`
+
+\item Zhao et al. → `\footcite[][]{zhao}`
+\end{itemize}
