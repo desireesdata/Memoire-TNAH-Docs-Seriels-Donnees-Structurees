@@ -2,7 +2,7 @@
 
 L’outil \emph{Corpusense} du projet Mezanno a pour ambition de proposer aux chercheurs et chercheuses en sciences humaines et sociales un dispositif dédié à l’exploitation de corpus d’archives sérielles. Là où la partie précédente du mémoire a montré la diversité des enjeux liés à la numérisation et à la mise à disposition de ces sources — qualité imparfaite de l’OCR, absence de structuration exploitable dans les textes bruts, masse de données qui rend toute saisie manuelle irréaliste — \emph{Corpusense} vise à apporter une réponse technique réaliste. \enquote{Réaliste}, car il s’appuie pour cela sur des briques logicielles déjà disponibles et rapides à mettre en place, qu’il agence en une chaîne cohérente correspondant au schème opératoire transcriptif défini précédemment, allant de la source numérisée à la donnée structurée.
 
-Le fonctionnement de \emph{Corpusense} repose principalement sur l’usage d’\textbf{API}, c’est-à-dire d’interfaces de programmation qui permettent à des logiciels hétérogènes de communiquer entre eux en suivant un protocole défini. Les API fonctionnent comme des guichets d'information qui délivrent, selon les requêtes, des données demandées, par exemple une série d'images et leurs métadonnées dans le cas de \textbf{IIIF}. Plutôt que de réimplémenter des modules complexes, l’outil tire parti de services spécialisés en les appelant directement via leurs API. Trois d’entre elles structurent le dispositif : IIIF, donc, qui est le standard largement adopté par les institutions patrimoniales, qui permet de charger et manipuler des images numérisées de manière normalisée. Il faut compter également une \enquote{APIsation} du moteur \textbf{Pero OCR} par l'EPITA; qui fournit comme on l'a vu une reconnaissance optique des caractères adaptée aux corpus historiques et multilingues. Et, enfin, l’API de \textbf{Mistral}, un modèle de langage, mobilisée pour transformer les textes OCRisés en sorties structurées adaptées aux besoins des chercheurs (voir \ref{fig:corpusense}). Ainsi, il s'agit de reconstituer une chaîne opératoire, composé de différentes briques agencées et constituées en outil.
+Le fonctionnement de \emph{Corpusense} repose principalement sur l’usage d’\textbf{API}, c’est-à-dire d’interfaces de programmation qui permettent à des logiciels hétérogènes de communiquer entre eux en suivant un protocole défini. Les API fonctionnent comme des guichets d'information qui délivrent, selon les requêtes, des données demandées, par exemple une série d'images et leurs métadonnées dans le cas de \textbf{IIIF}. Plutôt que de réimplémenter des modules complexes, l’outil tire parti de services spécialisés en les appelant directement via leurs API. Trois d’entre elles structurent le dispositif : IIIF, donc, qui est le standard largement adopté par les institutions patrimoniales, qui permet de charger et manipuler des images numérisées de manière normalisée. La constitution de corpus se fait donc à partir des dépôts d'archives numérisées, en général par des institutions patrimoniales. Il faut compter également une \enquote{APIsation} du moteur \textbf{Pero OCR} par l'EPITA; qui fournit comme on l'a vu une reconnaissance optique des caractères adaptée aux corpus historiques et multilingues. Et, enfin, l’API de \textbf{Mistral}, un modèle de langage, mobilisée pour transformer les textes OCRisés en sorties structurées adaptées aux besoins des chercheurs (voir \ref{fig:corpusense}). Ainsi, il s'agit de reconstituer une chaîne opératoire, composé de différentes briques agencées et constituées en outil.
 
 \begin{figure}[htbp]
 \centering
@@ -11,11 +11,9 @@ Le fonctionnement de \emph{Corpusense} repose principalement sur l’usage d’\
 \label{fig:corpusense}
 \end{figure}
 
-L'outil motive donc une double orientation. D’une part, il repose sur une chaîne de traitement unifiée, pensée pour transformer des documents d’archives sous forme image en données structurées, interopérables et prêtes à être analysées. D’autre part, il se veut flexible et accessible, de façon à laisser aux chercheurs SHS une autonomie réelle dans la conduite de leurs travaux.
+L'outil motive donc une double orientation. D’une part, il repose sur une chaîne de traitement unifiée, pensée pour transformer des documents d’archives sous forme image en données structurées, interopérables et prêtes à être analysées. D’autre part, il se veut flexible et accessible, de façon à laisser aux chercheurs SHS une autonomie réelle dans la conduite de leurs travaux. Concrètement, une application Web comme \emph{Corpusense} permet de constituer des corpus documentaires à partir de dépôts variés d’archives numérisées et d’y appliquer, sans compétences techniques avancées, des traitements qui aboutissent à des données exploitables.
 
 \section{Une instance de pipeline \enquote{classique}}
-
-\subsection{L'implémentation du schème opératoire}
 
 L’objectif de Corpusense veut fournir une infrastructure technique robuste pour solidariser les différents rouages (à savoir la constitution des corpus, OCR, extraction) \ref{fig:pipieline_mezz}.
 
@@ -45,83 +43,169 @@ Il est ainsi possible de représenter des cas simples ou complexes au sein d’u
 
 De plus, cette solidarisation des différentes briques techniques — de cette médiation technique pour constituer des questions et des réponses — ne fait pas disparaître la question de l’évaluation des données produites. Au contraire, elle la rend plus pressante. Car exploiter scientifiquement des données issues d’un assemblage \emph{abstrait} de techniques \emph{concrètes} — pour reprendre le vocabulaire de Gilbert Simondon — suppose de fonder une confiance raisonnée : confiance dans les outils choisis, dans la cohérence de la chaîne opératoire, mais aussi dans la capacité des chercheurs à expliciter les conditions de production des données qui alimentent leur analyse. Dans le cas d’une pipeline comme \emph{Corpusense}, on a affaire à un tel assemblage abstrait : une juxtaposition de fonctions spécialisées (OCR, segmentation, structuration), qui ne forment pas encore un objet intégré mais dont la coopération doit être évaluée comme un tout. Ce qui permet de fonder cette confiance est donc l’\emph{évaluation} de la chaîne de traitement, c’est-à-dire à la fois la performance de chaque module et la cohérence globale de l’ensemble.
 
-\subsection{Ateliers}
+\section{Le travail sur Corpusense}
 
-Avant de passer à l’évaluation proprement dite, arrêtons-nous sur un cas concret qui illustre bien les difficultés rencontrées. Lors d’un atelier mené à l'EHESS par les développeurs de \emph{Corpusense}, une chercheuse — sans formation particulière en informatique — a expérimenté l’outil sur un corpus de la Quatrième République. En une demi-heure, elle a pu obtenir un jeu de données massif, comprenant plus de 1200 entités liées à l’activité parlementaire, plus précisemment sur la production de documents parlementaires. L’exercice montre à quel point la chaîne de traitement peut être efficace et accessible : un travail qui aurait pris des semaines en dépouillement manuel est désormais réalisable en un temps réduit.
+Au moment du stage, \emph{Corpusense} était encore en cours de développement; toutes les fonctionnalités n'étaient pas encore disponibles. Je l’ai donc utilisé principalement pour la constitution du corpus, l’OCRisation et le téléchargement du texte issu de la \emph{Table nominale} de 1931. En revanche, pour la génération de la sortie structurée à l’aide de l’API Mistral, je travaillais directement depuis mon ordinateur, en effectuant les appels manuellement. Cette fonctionnalité est aujourd’hui intégrée dans \emph{Corpusense}, mais elle ne l’était pas encore au moment de mes expérimentations.
 
-Mais cette réussite apparente masque plusieurs écueils. La chercheuse, tâche peu facile oblige, a eu du mal à définir précisément son modèle de données : quelles entités retenir ? quelles relations considérer comme pertinentes ? quelle granularité adopter ? Faut-il penser en terme d'acteurs ? De documents produits ? Il a fallu essayer différents modèles pour obtenir un résultat satisfaisant ; redéfinir clairement ce que l'on tenait à savoir sur la période étudiée. De plus, même si la structuration a fonctionné, la question centrale reste ouverte : les données ainsi produites sont-elles fiables ? Dans quelle mesure peut-on leur faire confiance pour alimenter une enquête historique, et non seulement une démonstration technique ? A l'issue de cet atelier, qui visait avant tout à expérimenter l'outil qu'à produire de véritables données pour une question de recherche déterminée, le besoin de savoir si les données était fiables était urgent.
+Ce décalage n’affecte pas la validité des travaux réalisés : les modules sollicités -- notamment Mistral pour la production JSON -- sont identiques, seul le mode d’appel diffère. Les expérimentations sur la structuration des données ont donc été conduites à partir du texte brut, en dehors de l’application, mais elles prolongent directement le schème opératoire mis en place par \emph{Corpusense}.
 
-\chapter{Expérimentations}
+\section{Ateliers à l'EHESS et à la BnF}
 
-La pertinence scientifique des analyses repose sur l'évaluation, qui ne se réduit pas à un simple contrôle technique mais engage une véritable réflexion méthodologique. Dans le cadre de mon stage, j’ai cherché à articuler trois dimensions souvent pensées séparément. L’expérimentation, d’abord, consiste à mettre à l’épreuve des solutions techniques sur des corpus réels, avec toute l’incertitude et la contingence que cela suppose. La valuation, ensuite, au sens pragmatiste que lui donne Dewey, désigne la formation progressive de valeurs et de critères de pertinence au fil de l’expérience. Enfin, l’évaluation, qui vient formaliser ces critères sous forme de métriques, permet de mesurer de manière transparente la qualité des résultats. Loin de s’opposer, ces trois démarches s’entrelacent : l’expérimentation nourrit la valuation en faisant émerger de nouveaux repères, la valuation oriente le choix des métriques pertinentes, et l’évaluation fournit en retour des points d’ancrage solides pour comparer et améliorer les pipelines. Ainsi, la question de la métrique ne va pas de soi : elle prend sens dans un processus itératif où techniques, valeurs et jugements scientifiques se co-construisent.
+Avant de passer à l’évaluation proprement dite, arrêtons-nous sur un cas concret qui illustre bien les difficultés rencontrées. Lors d’un atelier mené à l'EHESS par les développeurs de \emph{Corpusense}, une chercheuse — sans formation particulière en informatique — a expérimenté l’outil sur un corpus de la Quatrième République. En une demi-heure, elle a pu obtenir un jeu de données massif, comprenant plus de 1200 entités liées à l’activité parlementaire, plus précisemment sur la production de documents parlementaires. L’exercice montre à quel point la chaîne de traitement peut être efficace et accessible : un travail qui aurait pris des semaines en dépouillement manuel est désormais réalisable en un temps réduit. 
 
-\section{Prise en main intuitive du problème}
+Cependant cette réussite apparente masque plusieurs écueils. La chercheuse, tâche peu facile oblige, a eu du mal à définir précisément son modèle de données : quelles entités retenir ? quelles relations considérer comme pertinentes ? quelle granularité adopter ? Faut-il penser en terme d'acteurs ? De documents produits ? Il a fallu essayer différents modèles pour obtenir un résultat satisfaisant ; redéfinir clairement ce que l'on tenait à savoir sur la période étudiée. On pourrait, en reprenant le mot de Leroy Ladurie, l'historien a tout intérêt à être \emph{designer} -- plutôt d'ailleurs que \enquote{programmeur} -- car l'enjeu est d'être capable de modéliser des données. De plus, même si la structuration a fonctionné, la question centrale reste ouverte : les données ainsi produites sont-elles fiables ? Dans quelle mesure peut-on leur faire confiance pour alimenter une enquête historique, et non seulement une démonstration technique ? A l'issue de cet atelier, qui visait avant tout à expérimenter l'outil qu'à produire de véritables données pour une question de recherche déterminée, le besoin de savoir si les données était fiables était urgent : ainsi, par ce cas exemplaire qui ne fait qu'illustrer une problématique qui a fondé les tenants et aboutissants du stage, la grande question de l'\emph{évaluation} et de la confiance que l'on peut porter aux données.
 
-Le travail a commencé par une phase d’exploration technique, où l’enjeu était de s’approprier la tâche d’évaluation des sorties structurées produites par des modèles génératifs. Une fois la tâche définie — comparer une vérité terrain et les données générées — plusieurs pistes ont été testées. La plus immédiate consistait à employer des prompts « naturels », en laissant au modèle une certaine latitude d’interprétation, mais en les contraignant par des schémas formels afin de produire des objets comparables (par exemple en JSON). Dans un registre plus classique, des expressions régulières ont également été utilisées pour segmenter et contrôler les extractions. Ces premières expérimentations relevaient d’un bricolage méthodologique, fait d’essais et d’erreurs, mais elles ont permis de dégager des lignes de force.
+\chapter{La sortie structurée via LLM appliquée à la Table des Noms du Sénat : une approche empirique}
 
-En pratique, différents outils ont été mobilisés. Des bibliothèques Python comme TED (Tree Edit Distance) ou Donut ont offert un premier socle de comparaison structurelle des objets générés. En parallèle, la construction de matrices de similarité à partir de distances de type Levenshtein a permis de visualiser les écarts entre la vérité terrain et la sortie du modèle. L’inégalité triangulaire, au cœur de la définition d’un espace métrique, a ainsi servi de point de repère théorique : il s’agissait moins d’aboutir à une véritable métrique que de se doter d’un plan de comparaison, pour observer comment les données générées « se rapprochent » ou « s’éloignent » de la référence.
+La pertinence scientifique des analyses repose sur l'évaluation qui ne se réduit pas à un simple contrôle technique. Elle engage une véritable réflexion méthodologique. Dans le cadre du stage, cette réflexion méthodologique s'est adossée à l’expérimentation sur la façon d'évaluer des données, générées par la pipeline. Evaluation et expérimention peut sembler antinomiques. Par évaluation, on entend une dimension scientifique, protocolaire. La notion de \enquote{créativité} que motive au fond celle d'expérimentation et sa dialectique de l'essai-erreur, ne semble pas de mise. Pourtant, la question de la métrique à laquelle s'adosse l'évaluation ne va pas de soi : car il faut évaluer à la fois l'indexation du contenu par le système technique; mais également sa structure de façon conjointe. Il faut également pouvoir apprécier les abscences, les hallucinations; éventuellement, les différentes façons d'OCRiser le texte, tester si un OCR réputé parfait conduit à des résultats finalement très proches de données très imparfaites. De plus, l'évaluation s'adosse à des \emph{vérités terrain} qui, comme on l'a vu pour l'OCR, forment un domaine de référence sur laquelle quantifier les écarts avec la génération du LLM. Ces vérités terrain, qui permettent de fonder une analyse permettant d'émuler l'objectivité, sont pourtant le fruit de décisions qui ne sont pas évidentes : comment nommer ses métadonnées, quelle structure -- ou \emph{schéma} -- conviendrait le mieux à nos données ? La modélisation, comme on vient de le voir également est une véritable affaire de design. Il y a donc un arsenal de paramètres à prendre en compte. Pour arrêter un protocole d'évaluation, il faut dégager des critères de façon empirique -- et donc expérimenter et réduire les paramètres selon ce qu'il semble le plus pertinent. Le mot de Gaston Bachelard selon lequel les instruments seraient de la \enquote{théorie réifiée} est particulièrement approprié à notre cas, car les moyens pour mesurer la qualité des données produites par la pipeline dépend de nos valuations. Cette évaluation prend sens dans un processus itératif où techniques et de valeurs amendées par l'expérimentation et par les objectifs fixés par une question de recherche.
 
-\section{Reflexions sur la notion de métrique à partir des matrice de similarité}
+Bien évidemment, cette expérimentation-évaluation s'adosse, non pas à une problématique technique pure, mais à une question de recherche en histoire -- bien qu'elle soit un motif pour guider l'exploration documentaire et computationnelle --, à savoir : cartographier l'activité parlementaire pour l'année 1931, conformément au \emph{reeanctement} collingwoodien suggéré en première partie de ce mémoire sur la qualité du débat parlementaire. Cette motivation historienne, en quatre mois seulement, ne saurait être mené de bout en bout. L'enjeu est donc de maîtriser et évaluer le protocole d'extraction; de tester sa complexité et vérifier qu'il est satisfaisant à ce stade, avant de mener des projets plus ambitieux.
 
-Dans les prolongements des premières expérimentations, j’ai été conduit à explorer de manière plus spéculative le statut des matrices de similarité utilisées pour comparer vérité terrain et sorties générées. La méthode d’appariement par transport optimal, bien qu’efficace, n’épuise pas la question. En manipulant ces matrices, il est apparu qu’elles ne constituaient pas nécessairement des espaces métriques au sens strict, car les propriétés classiques de symétrie, de séparation et surtout d’inégalité triangulaire ne sont pas toujours vérifiées. Pourtant, l’intuition demeure qu’il existe localement des zones où la métricité « émerge », c’est-à-dire où les correspondances entre vérité terrain et données produites se cristallisent sous une forme qui ressemble à un espace métrique.
+\section{Expérimentations}
 
-De cette intuition est née l’idée d’« archipels métriques ». Apparier deux ensembles distincts, c’est se confronter à un plan chaotique, où les correspondances sont partielles, bruitées, parfois trompeuses. Mais à l’intérieur de ce chaos, certaines régions se stabilisent : elles respectent suffisamment les critères de la métricité pour apparaître comme des sous-espaces cohérents. Chaque correspondance « réussie » se manifeste alors comme un îlot métrique, et l’ensemble des correspondances forme une sorte d’archipel. L’enjeu devient d’identifier ces zones stables, de les isoler et, peut-être, de mesurer le degré de relaxation nécessaire pour les faire apparaître.
+\subsection{Prise en main intuitive du problème de la génération de données}
 
-Cette approche implique de considérer la matrice de similarité non seulement comme un outil de visualisation, mais aussi comme un espace à part entière, doté d’une géométrie implicite. L’inégalité triangulaire, par exemple, peut être relâchée pour tolérer le bruit et les erreurs propres aux données générées. Plus le relâchement requis est faible, plus l’appariement correspond à une structure métrique robuste ; inversement, un relâchement trop important signale que la correspondance est artificielle. On passe ainsi d’une logique de mesure stricte à une logique de tropisme : la qualité d’un match ne se réduit pas à un score, elle se comprend comme une tendance à former ou non un espace métrique.
+L’expérimentation menée s’est organisée autour de deux volets complémentaires : d’une part, la génération de données à partir des \emph{Tables} parlementaires proprement dite; et, d’autre part, leur évaluation à l’aune d’une vérité terrain soigneusement construite.
 
-Ces réflexions restent exploratoires et parfois naïves. Elles traduisent néanmoins une conviction : l’évaluation des sorties générées par des modèles ne consiste pas seulement à comparer des chaînes de caractères ou à aligner des structures JSON, mais à interroger les formes de cohérence qui émergent de ces alignements. La métaphore des archipels métriques permet de rendre sensible cette idée : dans un océan de dissemblances, il existe des zones de stabilité où les correspondances prennent consistance, et c’est dans ces zones que se joue la possibilité d’un appariement pertinent.
+Dans un premier temps, le travail a consisté en une phase d’exploration technique visant à s’approprier la tâche d’évaluation des sorties structurées produites par un modèle génératif. L’objectif principal était de vérifier la faisabilité d’une extraction fiable des informations essentielles : les noms des intervenants au Sénat (qu’il s’agisse de sénateurs ou de ministres interpellés) et les dates de leurs interventions.
 
-\section{Design et vérité terrain}
+Ces dates ne figurent pas explicitement dans les \emph{Tables} ; elles doivent être déduites par le biais des références de page, lesquelles constituent des indicateurs temporels indirects. En d’autres termes, la pagination continue du \emph{Journal Officiel} rend possible un fléchage des interventions dans le temps, en reliant chaque entrée des tables à la séance correspondante comme on le verra en temps venu.
 
-Un autre axe d’expérimentation a concerné la construction de la vérité terrain elle-même. En théorie, celle-ci joue le rôle de référence absolue, garante de la « vérité » des données. En pratique, elle est le produit de choix opérés par le chercheur. Un exemple emblématique est celui de Louis Barthou, sénateur et ministre de la guerre en 1931 : fallait-il créer une seule entrée regroupant ses différentes interventions, ou distinguer ses apparitions selon ses rôles ? Dans mon cas, j’ai choisi la seconde option, au nom du principe de prudence : ne pas présupposer qu’il n’existe pas d’homonymes dans le corpus, et donc conserver la granularité des entrées. Mais ce choix a eu des conséquences directes sur l’évaluation, le modèle ayant tendance à factoriser les occurrences.
+Pour produire les données structurées, plusieurs pistes ont été explorées. La plus immédiate a été de recourir à des prompts « naturels » en utilisant directement l'interface Web de Mistral, laissant au modèle une certaine liberté interprétative dans sa réponse. 
 
-Ce type de situation montre que la vérité terrain n’est pas une donnée pure, mais un \textbf{design}. Elle peut être amendée, discutée, et parfois remise en cause par confrontation avec la machine. Le dialogue entre sorties générées et vérité terrain devient alors un lieu de négociation : la machine force à interroger les critères de segmentation, de répétition ou de fusion, et conduit à réévaluer des décisions éditoriales qui semblaient évidentes.
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{mistral.png}
+\caption{Illustration du résultat d'un prompt avec Mistral (en simulant le modèle disponible en avril 2025) où je soumets un extrait des Tables OCRisées. Comme on le voit, c'est un résultat qui mélange une liste de sénateurs et politesses qui sont ici inconvenantes à une extraction sémantique systématique.}
+\label{fig:mistral}
+\end{figure}
 
-\section{Le transport optimal}
+L'extraction d'une réponse dans l'environnement d'un chat résiste à l'extraction systématique, notamment parce qu'elle est entourée de politesses qui se surajoutent à l'information  qui nous intéresse -- ici la liste des sénateurs \ref{fig:mistral} . Mais également parce que cette réponse est émise dans un environnement -- en ligne -- qu'il est difficile à intégrer dans une pipeline. Les appels à l'API Mistral permettent donc à la fois d'interroger un LLM comme on l'a fait, mais depuis un script qui peut récupérer les données, les sauvegarder en local, d'appliquer divers traitements.
 
-our dépasser les limites des approches naïves, j’ai mobilisé le cadre du \textbf{transport optimal}, issu des travaux de Monge (1781) et de Kantorovitch (1942). Le problème est simple dans son principe : comment attribuer de façon optimale des éléments d’un ensemble à ceux d’un autre, en minimisant un coût global ? Appliqué à l’évaluation de sorties structurées, cela revient à chercher la permutation la plus économique entre les éléments de la vérité terrain et ceux produits par le modèle
+Ce qui nous permet désormais de justifier l’usage de Mistral : l’appel à l’API était gratuit, sans restrictions, et supportait la génération par sortie structurée -- c’est-à-dire la capacité de contraindre le modèle à suivre un schéma formel représentant nos données. Autrement dit, on peut utiliser, sans aucune installation ou dépense, un LLM pouvant être \enquote{contraint} à formuler du JSON -- et rien que du JSON -- par un schéma formels afin de produire des objets comparables. De fait, ce schéma \ref{fig:modelepy} était produit avec la librairie Pydantic qui permet de convertir des classes Python qui représentent le schéma de données, en modèle JSON.
 
-\section{La topologie appliquée aux données}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{modelepy.png}
+\caption{A gauche, l'implémentation en Pydantic via Python d'un des premiers modèles de données imaginé pour la génération guidée (à droite).}
+\label{fig:modelepy}
+\end{figure}
 
-Un dernier axe d’exploration a consisté à interroger la « forme » des données produites par les modèles. Jusqu’ici, l’évaluation reposait sur des comparaisons locales — appariements ponctuels entre vérité terrain et sorties générées — ou sur des instruments d’optimisation comme le transport optimal. Mais que se passe-t-il si l’on déplace la focale pour s’intéresser à la configuration globale des données ? Ont-elles une apparence reconnaissable, une cohérence de forme qui persiste malgré le bruit et les pertes introduites par la chaîne de traitement ?
+Mais un schéma, à lui seul, ne suffit pas : il doit être combiné à un prompt qui guide le modèle. Le tout premier essai reposait sur des instructions très simples :
 
-Cette interrogation m’a conduit à explorer le champ de la \textbf{Topological Data Analysis (TDA)}, qui propose d’extraire des signatures invariantes des données à partir de leur structure de connexité. L’idée est de transformer les données en nuages de points, puis de suivre au fur et à mesure l’apparition et la disparition de relations, de boucles et de cavités, pour dégager une « empreinte » topologique. Ces empreintes sont décrites à l’aide de diagrammes de persistance et de nombres de Betti, qui traduisent respectivement la naissance et la mort de structures (composantes connexes, cycles, cavités) et leur importance relative.
+\begin{quote}
+« Extrayez les informations du texte fourni. Je veux la liste des noms et prénoms de toutes les personnes mentionnées (des sénateurs). »  
+« Attention au bruit : tout ce qu’il y a dans le texte n’est pas forcément un sénateur. »  
+« Voici mon texte : »
 
-Appliquée au cas des Tables du Sénat, cette approche consiste à traduire les objets JSON (vérité terrain et prédictions du LLM) en matrices de similarité tautologiques, puis en matrices de distances. Chaque donnée devient alors un point, et l’on peut observer comment ces points fusionnent au fur et à mesure qu’on augmente un paramètre de connexion. Dans les données de vérité terrain, la progression suit une dynamique régulière : les points s’agrègent progressivement en groupes, puis en une structure compacte. Dans les données prédites, la dynamique est comparable, mais l’on observe davantage de « composantes » initiales, témoignant d’hallucinations du modèle.
+\end{quote}
+Ces instructions rudimentaires avaient pour objectif principal de vérifier le bon fonctionnement de l’appel à l’API et le retour des données dans le format JSON. En pratique, le pipeline consistait en un script Python qui, à partir du texte OCRisé, soumettait au modèle Mistral un prompt et un schéma, puis récupérait les données produites \footcite[][]{pipeline_mezz}.
 
-Les \textbf{courbes de Betti} permettent de visualiser cette évolution : elles montrent que la structure prédite suit globalement le rythme de la vérité terrain, même si des divergences apparaissent. Pour en rendre compte plus finement, j’ai eu recours à la \textbf{Dynamic Time Warping (DTW)}, un algorithme de comparaison de séquences qui tolère des décalages de rythme. Cette méthode permet de mesurer la proximité des trajectoires topologiques des deux ensembles, en produisant un score de similarité compris entre 0 et 1. Dans mon cas, la similarité entre vérité terrain et données générées avoisinait 95 \%, tandis qu’elle tombait à 14 \% pour un ensemble bruité, ce qui en fait ne confirme pas l’intérêt heuristique de la démarche puisque les métriques ne sont pas convergente. Des bons résultats sont moins des preuves de la concordance des données qu'un mobile qui \enquote{pousse} des jeux de données à se ressembler.
+Toutefois, dès les premiers tests, des limites sont apparues : les clés choisies dans le modèle, comme \emph{ListeSenateur} ou \emph{Senateur}, étaient trop restrictives. Or, les \emph{Tables nominatives} ne mentionnent pas seulement des sénateurs, mais également des ministres interpellés ou intervenants extérieurs. Un schéma trop strict risquait donc d’induire des omissions. Pour contourner ce problème, il a été décidé d’adopter un vocabulaire plus fonctionnel, centré sur les \emph{intervenants} plutôt que sur une fonction institutionnelle définie de façon explicite. Une fois cette chaîne de traitement permettant de produire des données essayée, il était l'heure de consolider un protocole d'évaluation de cette méthode de génération de métadonnées.
 
-Cette expérimentation ne prétend pas fournir une métrique décisive. La topologie appliquée aux données doit plutôt être comprise comme un \textbf{outil de diagnostic}, complémentaire des approches locales. Elle offre une vue d’ensemble, un paysage global de la « tête » des données, qui aide à détecter des décalages structurels invisibles à une échelle ponctuelle. En contexte patrimonial ou documentaire, où la robustesse de la structuration et l’intégrité informationnelle sont essentielles, cette dimension peut enrichir l’évaluation, en apportant des indices qualitatifs sur la cohérence ou l’érosion de la forme des données au fil des transformations.
+\subsection{Design, prompt et vérité terrain : trouver le bon modèle de données}
 
-En définitive, cette piste reste exploratoire, mais elle ouvre des perspectives stimulantes : appliquer la TDA non seulement à des données tabulaires ou arborescentes, mais aussi à des représentations sémantiques (embeddings), afin d’évaluer si les opérations de normalisation ou de conversion conservent les régularités topologiques des corpus. Ce serait une manière de répondre à une question fondamentale : qu’est-ce qui persiste, et qu’est-ce qui se perd, lorsque l’on passe de la vérité terrain à la donnée prédite ?
+Un second volet des expérimentations a porté sur la construction de la vérité terrain, élément indispensable à toute évaluation. En théorie, elle sert de référence absolue pour mesurer les performances du modèle. En pratique, elle résulte d’une série de décisions éditoriales et méthodologiques qui influencent directement les résultats. L’exemple de Louis Barthou, sénateur et ministre de la Guerre en 1931, illustre ce point : fallait-il regrouper toutes ses interventions sous une seule entrée ou distinguer ses apparitions selon ses fonctions \ref{fig:barthou}  ? Le choix de la granularité maximale – séparer chaque occurrence – prévient les confusions d’homonymes, mais complique l’évaluation en raison de la tendance du modèle à fusionner les mentions.
 
-En définitive, cette piste topologique doit être considérée comme une expérimentation récréative : elle n’a pas produit de résultats directement exploitables, mais elle a eu une vertu heuristique importante. Elle m’a conduit à revenir sur l’algorithme de \textbf{Dynamic Time Warping (DTW)}, non plus seulement comme un outil de comparaison de courbes topologiques, mais comme un instrument susceptible d’articuler la dimension séquentielle des données avec la distance de Levenshtein. En effet, si la distance de Levenshtein capture le coût minimal des opérations nécessaires pour transformer une chaîne en une autre, elle ne prend pas en compte le rythme ni la dynamique de ces transformations. La DTW, au contraire, permet de comparer des séquences qui ne sont pas parfaitement alignées, en tolérant des décalages ou des variations de vitesse. En croisant ces deux approches, on pourrait donc envisager un dispositif capable de mesurer la qualité d’un appariement à la fois sur le plan des opérations locales et sur celui de la cohérence temporelle globale.
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{barthou.jpg}
+\caption{}
+\label{fig:barthou}
+\end{figure}
 
-\chapter{Livrable : une métrique et un article}
+Sur le plan technique, la vérité terrain est lié au prompt et au schéma de données (\ref{fig:modelpy}). Le schéma de données fait office de \enquote{carte} qui vient guider la production textuelle du LLM. Il indique \enquote{où} mettre les bons mots dans les bonnes boîtes, les bons intitulés avec les bonnes clés. Pour éviter de démultiplier les paramètres à tester, le prompt (voir : ANNEXE 31) et le schéma (ANNEXE 32) ont été stabilisés à l'issu d'un processus itératif pour évaluer la granularité adéquat. Dans le cadre de l'évaluation, seul le nom du sénateur et les pages de références ont été retenues. Pour guider au mieux la génération du JSON par le LLM, on ajoute à notre schéma des descriptions pour qu'il puisse être plus attentif pour qu'il puisse plus facilement mettre les données dans les bonnes boîtes \ref{fig:model}.
 
-\section{Extraction guidée par schéma des interventions parlementaires à partir des index historiques}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{model.png}
+\caption{}
+\label{fig:model}
+\end{figure}
 
-\subsection{Les Tables nominatives du Sénat de 1931}
+Le schéma (\ref{fig:model}) joue donc ici le rôle de grammaire opérationnelle : il décrit précisément la structure attendue des sorties (nom, rôle et références paginaires des intervenants), et contraint le modèle à produire un JSON validable. Les premières clés (« Senateur », « ListeSenateur ») ont rapidement montré leurs limites : elles risquaient l'invisibilité d’autres acteurs -- comme les ministres -- et biaisaient l’extraction. La version finale de la vérité terrain (ANNEXE 33) adopte des catégories plus neutres (« Intervenant »), révélant que la modélisation n’est jamais un simple exercice technique mais un choix interprétatif.
 
-Il existe une édition des \emph{Tables du Journal Officiel} pour chaque année, comprenant typiquement environ 450 pages dans les années 1930. La section intitulée \emph{Tables des noms} — qui inclut à la fois le Sénat et la Chambre des députés — s’étend sur une quarantaine de pages, dont environ quinze pour la partie Sénat.
+Quant aux données produites automatiquement par cette chaîne de traitement stabilisées et appliquées sur l'ensemble des pages des \emph{Tables} du Sénat de 1931 (extraits en annexe : ANNEXE 34) , elles semblent être cohérentes. Mais, à défaut d'évaluation, on ne pas tirer de conclusion décisives.
 
-Pour l’année 1931, les \emph{Tables des noms} du Sénat couvrent 14 pages et comptent environ 300 entrées, chacune correspondant à une intervention en assemblée. Chaque entrée est associée à un orateur et détaille différents types d’actions (demandes d’interpellation, discussions de projets de loi, lecture de rapports de commission, dépôt d’amendements, etc.), accompagnées d’une référence de page renvoyant à la transcription complète de l’intervention.
+\subsection{Préparer l'évaluation : comparer, apparier}
 
-Ces transcriptions sont publiées dans les \emph{Débats parlementaires} du Sénat. Les tables sont donc liées fonctionnellement aux transcriptions par la pagination. Comme la numérotation des pages est continue sur toute l’année, chaque référence permet de dater précisément l’intervention correspondante.
+L’évaluation des sorties structurées générées par un LLM reposant sur un schéma, un prompt repose donc sur une comparaison systématique entre deux ensembles : la vérité terrain construite manuellement comme référence, et les données produites automatiquement par le modèle. L’objectif est maintenant de mesurer objectivement la fidélité de la génération, d’identifier les omissions, duplications ou erreurs, et d’évaluer la robustesse globale du système. Lors de la phase exploratoire autour de l'évaluation, plusieurs approches méthodologiques et outils de comparaison ont été expérimentés afin de prendre en main les méthodes classiques de mesure de similarité et identifier des indicateurs adaptés à l’évaluation qualitative de données produites par un modèle génératif. 
 
-\subsection{Chaîne de traitement pour l’extraction structurée guidée par schéma}
+Comparer une vérité terrain soigneusement construite avec des données générées par un modèle de sortie structurée ne se résume pas à vérifier la présence ou l’absence d’éléments identiques. Plusieurs sources de divergences compliquent l’évaluation : des nœuds peuvent être omis, inventés ou dupliqués ; des erreurs d’OCR altèrent le texte ; des éléments sont regroupés ou mal hiérarchisés dans la structure JSON. La comparaison doit donc dépasser une logique purement textuelle pour capturer ces écarts dans toute leur complexité, tout en restant robuste et interprétable. La comparaison n'est pas un simple \enquote{face à face} entre des données réputées parfaites et des données générées. L'expérimentation a permis de mettre en lumière certaines méthodes -- et d'en rejeter d'autres comme la \emph{Tree Edit Distance}, davantage basée sur la structure des données que leur contenu.
 
-Malgré les avancées récentes des grands modèles de vision et langage (LVLMs), leurs performances \emph{end-to-end} en zéro-shot restent insuffisantes pour des tâches d’OCR à haute précision. Pour contourner cette limite, nous adoptons une chaîne de traitement simple, exploitant les forces de composants spécialisés afin de maximiser la précision globale de l’extraction.
+La première étape a consisté à expérimenter la comparaison chaque élément textuel de la vérité terrain avec chaque élément généré, ce qui conduit à aplatir temporairement la structure JSON pour se concentrer sur le contenu. La distance de Levenshtein a été privilégiée, car elle mesure simplement le coût minimal d’édition (insertion, suppression, substitution) entre deux chaînes de caractères ; elle est donc adaptée pour évaluer des données issues d’un pipeline OCR + LLM, où les erreurs sont souvent lexicales plutôt que conceptuelles. Concrètement, ces distances ont été organisées en une \emph{matrice de similarité} (\ref{fig:matricesim}), dans laquelle chaque cellule représente le coût de transformation d’un élément de la vérité terrain en un élément généré. 
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{matricesim.png}
+\caption{Matrice de similarité généré avec Python. Les points clairs représentent des distances faibles, c'est-à-dire des mots très similaires.}
+\label{fig:matricesim}
+\end{figure}
+
+Ce dispositif visuel met en évidence des phénomènes difficiles à saisir autrement : comme les décalages -- des zones sombres signalent des omissions ou des décalages d’alignement, le modèle ayant « perdu le fil » avant de se resynchroniser -- et les regroupements -- des correspondances multiples sur une même ligne indiquent que plusieurs éléments ont été agrégés dans une seule entrée.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{decalage.png}
+\caption{Zoom sur la matrice de similarité : un décalage de la diagonale peut signifier une omission.}
+\label{fig:decalage}
+\end{figure}
+
+L’observation de ces matrices ont d'ailleurs conduit, à la marge, à une réflexion plus conceptuelle. En effet, ces matrices ne forment pas toujours un espace métrique au sens strict, car des propriétés comme l’inégalité triangulaire peuvent être bafouées -- autrement dit, l'ensemble des distances peuvent dessiner un paysage impossible où il n'y a pas de cohérence avec les distances. Pourtant, on observe des zones de cohérence locale qui respectent suffisamment ces propriétés pour fonctionner comme des espaces métriques restreints. Là où il y a émergence de propriétés métriques, il y a l'hypothèse d'une correspondance entre la vérité terrain et les données générées. Deux ensembles identiques comparés forment un espace métrique : on pourrait alors calculer \enquote{l'effort} d'une matricité de similarité pour devenir un véritable espace métrique. Encore une fois, il s'agit d'une réflexion marginale qui n'a pas été développée ensuite. Cependant, cela permet de mettre en avant certains garde-fous dans le cadre de l'évaluation, à savoir le respect de certaines propriétés mathématiques liées à la mesure.
+
+Ensuite reste l'étape de la comparaison proprement dite. Comment mettre correspondance les bonnes paires ? Comment comparer toutes les entrées de la vérité terrain avec celles générées ? Si la matrice de similarité représente toutes les relations entre les vérités terrain et les données générées, c'est une cartographie relationnelle qui ne nous permet pas d'apparier les ensembles en vue d'évaluer la qualité des prédictions; elle ne dit pas comment assembler nos entrées. De même, à cause des desynchronisation, il faut pouvoir aller comparer des éléments qui ne sont pas nécessairement \enquote{en-face}, c'est-à-dire qui ne partage pas le même rang.
+
+Pour ce travail de mise en correspondance, intervient le transport optimal. Introduit par Gaspard Monge en 1781 -- dans son \emph{Mémoire sur la théorie des déblais et remblais} -- et reformulé par l'économiste soviétique Leonid Kantorovitch en 1942, le transport optimal vise à trouver la correspondance la plus économique entre deux ensembles : ici, les éléments de la vérité terrain et ceux générés. Plutôt que de tester toutes les permutations possibles, dont le nombre croît de manière factorielle, le transport optimal représente le problème sous forme d’une matrice de coût -- qui ici peut nous être donnée à partir de la matrice de similarité -- et cherche à minimiser la somme des coûts d’appariement. Cette méthode permet donc d’obtenir un alignement global optimal, même lorsque les ensembles ont des tailles différentes; de détecter les correspondances « justifiées » au sens du coût minimal, tout en identifiant les zones où la correspondance est faible ou artificielle; de dépasser une logique purement séquentielle pour analyser la distribution globale des erreurs et omissions. Notre coût, ici, ce sont les \enquote{coûts d'édition} autrement dit nos distances de Levenstein, exprimée par la matrice de similarité.
+
+Cette approche est intéressante pour documenter l’état des sorties générées : elle ne prétend pas résoudre les problèmes d’ordre ou de sémantique, par exemple, apparier « sénateur » et « parlementaire » demanderait des distances sémantiques -- bien que c'est une piste envisageable avec les \emph{embeddings} dans le cas d'une analyse thématique des interventions parlementaires. En revanche, elle fournit une mesure robuste de dissemblance structurelle que nous offre justement le paysage des distances de Levenstein.En pratique, les vérifications manuelles réalisées sur de petits ensembles de données ont confirmé que les appariements identifiaient correctement les correspondances : chaque élément de la vérité terrain était relié à son équivalent prédit par le modèle. Ces tests ont permis d’esquisser un protocole d’évaluation fiable, en ancrant l’intuition dans des outils mathématiques et informatiques éprouvés.
+
+Il ne s’agit cependant pas d’une démarche inédite : elle transpose à l’analyse des textes structurés un principe ancien et solide de l’évaluation de segmentation en vision par ordinateur. Comme l’explique Chazalon et Carlinet \footcite[][]{chazalon} à propos de la segmentation panoptique de cartes historiques, il est à la fois possible et pertinent de reformuler l’appariement des régions segmentées — contenus visuels — via un cadre bipartite, d’utiliser des métriques classiques (précision, rappel, F-score) \footcite[][]{chazalon}. Appliquée à nos données textuelles, cette approche inspire l’idée que l’appariement entre vérité terrain et données générées ne repose pas seulement sur le calcul statistique, mais peut aussi être qualifié, visualisé et interprété selon des logiques proches de celles de l’image numérique. En tout cas, une phase de l'expérimentation a consisté à comprendre la nature du transport optimal -- notamment avec les travaux de Gabriel Peyré \footcite[][]{peyre} -- afin d'en saisir les limites -- l'appariement ne regarde pas le sens des mots et ne prend pas compte de l'aspect séquentielle des entrées -- et les avantages -- permet justement de surmonter le problème des oublis et de faire correspondre des données qui ne sont pas \enquote{en face}. Cela impliquant ainsi d'intégrer \emph{a posteriori}, dans les métriques qui rendent compte de la qualité des données générées également la qualité de l'appariement.
+
+Toutefois, ces expérimentations mettent également en évidence la dimension heuristique de cette démarche : les résultats dépendent autant du choix des mesures de similarité (distance de Levenshtein) que de la stratégie d’appariement retenue (transport optimal), ce qui engage une réflexion critique sur le design même de l’évaluation. Ainsi, même si la méthode hérite de protocoles éprouvés de l’imagerie, son adaptation à un contexte textuel demande des choix méthodologiques soigneux et explicités.
+
+\section{Recouper des données pour l'analyse historienne}
+
+Dans une perspective historienne, la capacité à naviguer dans les volumes du \emph{Journal officiel} ne repose pas uniquement sur la qualité des extractions textuelles, mais sur le recoupement systématique des données. L’enjeu est de relier des références issues des tables — ici limitées à des numéros de pages et aux occurences nominales — à des dates précises de publication, condition essentielle pour contextualiser les débats ou décisions mentionnés. Pour ce faire, nous avons exploité les manifests IIIF fournis par l’API Gallica, qui décrivent chaque volume sous forme d’une structure hiérarchisée : chaque page est identifiée, ordonnée et associée à une URL stable. Ce cadre technique permet de reconstituer un tableau complet \enquote{page → date}, en combinant l’ordre des pages du manifeste avec les métadonnées des volumes et les dates présentes sur les pages de titre. Cette opération ne vise pas à créer un modèle sophistiqué de reconnaissance ou d’indexation, mais plutôt à bâtir un pivot de référence déterministe pour toute analyse ultérieure : il devient possible de passer d’une citation brute (une page) à son contexte temporel exact. 
+
+Il est important de souligner qu'à ce stade, cette correspondance se fonde sur les pages extraites par le système et rien n'indique que cette extraction repose sur des données fiables. Si ces données, à défaut d'évaluation, ne sont pas exploitables scientifiquement pour répondre à une question de recherche, il est cependant convenable de vérifier qu'on peut, à partir d'elles, avoir des informations plus intéressantes que des références de pages, comme des informations chronologiques.
+
+\subsection{Des pages aux dates : utilisation de l'API Gallica et des métadonnées des manifestes}
+
+La constitution d’un tableau « page → date » s’appuie sur les services IIIF proposés par Gallica, qui fournissent pour chaque document numérisé un manifest JSON décrivant l’ensemble de ses pages. Ce \emph{manifest} joue le rôle de table des matières numérique : il contient, pour chaque page, son ordre dans le volume, son libellé (numéro de page ou folio) et des identifiants pérennes vers l’image et le contenu OCRisé. La première étape consiste à interroger automatiquement cette ressource -- via des requêtes HTTP en lignes de commande, et notamment avec \enquote{curl} -- pour extraire la séquence complète des pages.
+
+Ensuite, les pages sont indexées : chaque entrée du manifest est associée à son URL lisible et à son numéro de séquence. Cette structure séquentielle est cruciale, car elle fournit un pivot neutre pour relier des références issues d’autres sources (tables imprimées, index, etc.).
+
+La seconde étape exploite les pages de titre qui portent la date d’édition. Ces informations, accessibles via l’API Gallica sont extraites puis assignées à des plages de pages contiguës : ainsi, toutes les pages comprises entre deux dates identifiées héritent de la date correspondante.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{bnfjson.png}
+\caption{Fragment du tableau de correspondance page/date en .csv}
+\label{fig:bnfjson}
+\end{figure}
+
+En combinant ces deux sources (manifest + extraction de dates), on construit une table de correspondance exhaustive reliant chaque page d’un volume à sa date exacte de parution. Cette table, exportée en CSV, sert ensuite de base à des analyses historiennes : une référence de page extraite d’un index thématique peut être immédiatement replacée dans son contexte temporel. L’approche, entièrement automatisable, repose sur des standards ouverts (IIIF, JSON, HTTP) et sur des outils simples de parsing et de jointure de données, ce qui garantit sa robustesse et sa réutilisabilité. (ANNEXE 34)
+
+\chapter{Livrables}
+
+\section{Jeux de données pour le protocole d'évaluation de la sortie structurée}
+
+\subsection{Protocole d’évaluation de la sortie structurée}
+
+L’objectif de l’évaluation est de comparer les sorties produites par le LLM -- notées P, pour \emph{prédiction} -- au \emph{ground truth} -- la vérité terrain, notée G. Chaque instance de donnée correspond à une liste d’entrées, chacune constituée d’un nom d’orateur et d’une liste de pages référencées.
+
+Un défi majeur, on l'a vu, tient au fait que le modèle peut produire le bon ensemble d’entrées, mais dans un ordre différent, ou avec de légères variations structurelles. Pour résoudre cela, nous adoptons une stratégie d’alignement flexible inspirée utilisant le transport optimal pour établir une correspondance \emph{one-to-one} entre prédictions et référence. Cette approche neutralise la contrainte d’ordre et tolère des divergences mineures, permettant une évaluation robuste.
+
+L'OCRisation est indépendante et en amont de la comparaison :
 
 \begin{enumerate}
-\item Chaque page image est d’abord traitée indépendamment par le moteur OCR \textbf{PERO} [8, 10, 11] pour détecter et transcrire le texte.
-\item Compte tenu des difficultés persistantes de segmentation de mise en page, nous produisons trois variantes de transcription par page afin de refléter la variabilité de ce type de pipeline (détaillées en section 4.1).
-\item Une fois les transcriptions obtenues, nous concaténons le texte issu de toutes les pages pertinentes pour former un flux unique. Celui-ci est fourni en entrée à un LLM, chargé de produire les données structurées cibles.
+\item Chaque page image est d’abord traitée indépendamment par le moteur OCR PERO pour détecter et transcrire le texte.
+\item Compte tenu des difficultés persistantes de segmentation de mise en page, nous produisons trois variantes de transcription par page afin de refléter la variabilité de ce type de pipeline : une OCRisation \enquote{brute}, sans segmentation; une OCRisataion qui repose sur une segmentation manuelle; et une émulation d'une OCRisation réputée parfaite, fait à la main, qui correspond à la vérité terrain.
 
 \end{enumerate}
 Dans nos expérimentations, pour des raisons pratiques, chaque page est traitée indépendamment, mais la méthode peut être étendue à des contextes multi-pages.
 
-Bien que les LLMs puissent être incités à générer des sorties structurées, il est essentiel de contraindre leurs générations au format attendu. Parmi les méthodes existantes, la plus efficace repose sur le filtrage des tokens valides au moment de l’inférence à l’aide d’un validateur externe (par exemple un automate fini) [23]. Cette capacité est disponible dans certaines API commerciales étendues.
+Bien que les LLMs puissent être incités à générer des sorties structurées, il est essentiel de contraindre leurs générations au format attendu. Parmi les méthodes existantes, la plus efficace repose sur le filtrage des tokens valides au moment de l’inférence à l’aide d’un validateur externe (par exemple un automate fini). Cette capacité est disponible dans certaines API commerciales étendues.
 
 Notre processus d’extraction s’appuie donc sur :
 
@@ -132,74 +216,25 @@ Notre processus d’extraction s’appuie donc sur :
 \item et une API supportant les sorties contraintes.
 
 \end{itemize}
-Pour cette étude, nous avons retenu l’API \textbf{Mistral}⁴, avec le modèle \emph{Ministral 8B Instruct v2410} [16], en raison de ses bonnes performances \emph{zero-shot}, de son coût modéré et de la disponibilité publique de ses poids à des fins de recherche⁵.
+Pour cette étude, nous avons retenu l’API Mistral, avec le modèle \emph{Ministral 8B Instruct v2410}, en raison de ses bonnes performances \emph{zero-shot}, de son coût modéré et de la disponibilité publique de ses poids à des fins de recherche.
 
-\subsection{Modélisation des données et définition du schéma}
+\subsection{Vérité terrain, prompt et schéma : un échantillon des Tables}
 
-L’objectif principal est d’extraire des informations structurées sur l’activité parlementaire du Sénat français en 1931, dans la perspective de construire une frise interactive représentant la densité d’interventions au cours du temps. Pour garantir la fiabilité et l’interprétabilité de cette visualisation, il est nécessaire de fournir des indicateurs clairs de qualité d’extraction.
-
-Le lien direct entre fiabilité de l’extraction et confiance dans les réponses à des questions de recherche demeure un défi. Nous concentrons donc notre évaluation sur des métriques bien définies, qui quantifient la similarité entre structure prédite et structure de référence (\emph{ground truth}). Ces métriques ne rendent pas encore compte de l’impact sémantique des erreurs, mais constituent une base transparente d’évaluation.
-
-La tâche d’extraction repose sur l’identification des entrées individuelles dans les \emph{Tables nominatives} — c’est-à-dire les noms des sénateurs et leurs références de pages. Ces numéros de pages servent d’indicateurs temporels indirects, puisque la pagination est continue sur l’année. L’information extraite est représentée en JSON, format à la fois structuré et interopérable, permettant un traitement ultérieur (CSV, analyses).
-
-Le schéma de données utilisé pour guider le LLM est défini au niveau des noms d’orateurs et de leurs références de pages, ce qui suffit à notre objectif. Nous utilisons la bibliothèque \textbf{Pydantic}⁶ pour formaliser ce schéma de manière compatible JSON, avec validation stricte des types et descriptions intégrées. Ces descriptions jouent le rôle d’étiquettes sémantiques, améliorant la clarté du prompt et l’orientation du modèle.
-
-\subsection{Construction du prompt pour l’extraction}
-
-Le prompt fourni au LLM (cf. Annexe B) vise à guider l’extraction des participants (sénateurs, ministres) et de leurs références de pages à partir du texte. Sa structure est la suivante :
-
-\begin{itemize}
-\item \textbf{Définition de la tâche} : préciser que chaque entrée correspond à une personne ayant participé aux activités du Sénat (sénateurs, ministres, etc.), dont il faut extraire le nom et les références de pages.
-\item \textbf{Clarification des termes} : donner des définitions pour des termes clés comme « entrée » ou « action », afin d’éviter toute ambiguïté.
-\item \textbf{Cas particuliers} : indiquer comment traiter les cas de renvois d’index (sans numéros de pages, mais renvoyant vers une autre entrée) et les entrées fragmentées sur plusieurs pages (ignorées pour simplifier cette première étude).
-\item \textbf{Instructions de formatage} : spécifier les règles de présentation des noms (prénom entre parenthèses après le nom de famille) et des références de pages.
-
-\end{itemize}
-Le prompt pourrait être encore amélioré en y intégrant davantage de contexte historique ou d’exemples représentatifs (\emph{few-shot prompting}).
-
-\subsection{Raffinement itératif du schéma et du prompt}
-
-Au cours de l’étude, le schéma et le prompt ont été ajustés de manière itérative. En effet, le LLM proposait parfois spontanément des manières alternatives — et parfois plus efficaces — de structurer l’information extraite. Par exemple, il avait tendance à dédupliquer les références de pages répétées pour un même orateur, simplifiant ainsi le résultat au-delà du schéma initial.
-
-La construction du \emph{ground truth} a donc dû trouver un équilibre entre respect strict du schéma formel et prise en compte des tendances de structuration du LLM.
-
-Afin d’éviter tout biais, tous les ajustements de schéma et de prompt ont été réalisés uniquement sur une page de développement (dite « page 02 »). Les autres pages ont servi exclusivement aux tests finaux, suivant les bonnes pratiques en apprentissage automatique.
-
-À l’avenir, ce processus pourrait être automatisé ou enrichi par des stratégies systématiques d’ingénierie de prompts.
-
-\section{Expériences}
-
-La configuration expérimentale a été mise en place à travers une phase de développement initiale, durant laquelle le schéma de données, les instructions du prompt et les données de référence structurées pour une page de développement ont été affinés de manière itérative. Une fois cette phase finalisée, nous avons appliqué le modèle de base à un ensemble plus large de pages, puis corrigé manuellement les sorties afin de construire un \emph{ground truth} impartial pour l’évaluation.
-
-Cette section détaille le jeu de données obtenu, les variantes générées pour l’analyse, ainsi que le protocole d’évaluation adopté pour mesurer rigoureusement la qualité des prédictions.
-
-\subsection{Jeu de données}
-
-Les données de référence (\emph{ground truth}) ont été construites pour évaluer de manière rigoureuse la qualité d’extraction à différents niveaux de fidélité OCR. Pour chaque page sélectionnée, trois variantes distinctes issues du moteur OCR \textbf{PERO} [8, 10, 11] ont été générées :
-
-\begin{enumerate}
-\item une version corrigée manuellement (or servant de standard de référence),
-\item une version basée sur une segmentation manuelle de la mise en page,
-\item une version brute, sans correction ni segmentation.
-
-\end{enumerate}
-Ce dispositif permet d’évaluer systématiquement la robustesse du pipeline face au bruit et aux artefacts de mise en page.
+A l'issue de la démarche d'expérimentation en vue de l'évaluation a été produit le design de vérité terrain, accompagné de son schéma et du prompt, qui sera comparées à l'information extraite par le LLM. La tâche d’extraction repose sur l’identification des entrées individuelles dans les \emph{Tables nominatives} — c’est-à-dire les noms des sénateurs et leurs références de pages. (ANNEXE 33, 34)
 
 Un échantillon aléatoire de cinq pages consécutives a été choisi pour transcription et annotation manuelles. Comme les entrées peuvent s’étendre sur plusieurs pages, certaines se retrouvent tronquées. Dans ces cas, le LLM a été explicitement instruit d’ignorer les éléments incomplets. Ce choix reflète les défis réalistes de l’extraction, où une prise en compte multi-pages (ou en flux continu) serait nécessaire en production, mais dépasse le cadre de cette étude.
 
-Chaque page a été traitée indépendamment afin d’éviter tout biais lié au contexte séquentiel. Cela a parfois conduit à des extractions débutant en milieu d’entrée, fournissant au modèle des informations tronquées et testant sa capacité à interpréter des contextes partiels. Bien que les documents sources soient généralement bien numérisés, certaines distorsions (plis, coupures) introduisent des difficultés réalistes, révélant les limites du modèle en conditions imparfaites.
+L’évaluation porte sur 109 entrées réparties sur cinq pages, chacune testée dans les trois conditions OCR.
 
-Les sorties structurées ont été générées avec le modèle \textbf{Ministral 8B}, en utilisant un prompt fixe et un schéma défini via Pydantic pour garantir la cohérence. Une température nulle a été choisie pour obtenir des résultats déterministes. Pour chaque page et variante OCR, le modèle a produit des sorties JSON, ensuite comparées aux représentations de référence construites manuellement.
+\subsection{Prédictions obtenues avec le modèle Mistral 8b avec  l'extraction guidée par schéma}
 
-L’évaluation porte sur \textbf{109 entrées réparties sur cinq pages}, chacune testée dans les trois conditions OCR.
+Pour l’année 1931, les \emph{Tables des noms} du Sénat couvrent 14 pages et comptent environ 300 entrées, chacune correspondant à une intervention en assemblée. Chaque entrée est associée à un orateur et détaille différents types d’actions (demandes d’interpellation, discussions de projets de loi, lecture de rapports de commission, dépôt d’amendements, etc.), accompagnées d’une référence de page renvoyant à la transcription complète de l’intervention.
 
-\subsection{Protocole d’évaluation des sorties structurées}
+Ces transcriptions sont publiées dans les \emph{Débats parlementaires} du Sénat. Les tables sont donc liées fonctionnellement aux transcriptions par la pagination. Comme la numérotation des pages est continue sur toute l’année, chaque référence permet de dater précisément l’intervention correspondante.
 
-L’objectif de l’évaluation est de comparer rigoureusement les sorties produites par le LLM (notées $P\$) au \emph{ground truth} (noté \$G$). Comme décrit en section 3.3, chaque instance de donnée correspond à une liste d’entrées, chacune constituée d’un nom d’orateur et d’une liste de pages référencées.
+\section{Une métrique pour l'évaluation des données générées par la sortie stucturée via LLM}
 
-Un défi majeur tient au fait que le modèle peut produire le bon ensemble d’entrées, mais dans un ordre différent, ou avec de légères variations structurelles. Pour résoudre cela, nous adoptons une stratégie d’alignement flexible inspirée de [2, 7], utilisant le transport optimal pour établir une correspondance \emph{one-to-one} entre prédictions et référence. Cette approche neutralise la contrainte d’ordre et tolère des divergences mineures, permettant une évaluation robuste.
-
-\subsubsection{Distance au niveau des entrées et appariement optimal}
+\subsection{Mise en correspondance des prédictions et de la vérité terrain avec le transport optimal}
 
 Pour comparer les entrées prédites et de référence, nous définissons une distance normalisée $d_e(g_i, p_j)$ qui combine deux composantes :
 
@@ -223,7 +258,7 @@ $$
 
 Un appariement \emph{one-to-one} entre prédictions et vérité terrain est alors établi par transport optimal [19], minimisant la distance totale et fournissant une base rigoureuse pour l’évaluation.
 
-\subsubsection{Limites des métriques classiques : précision, rappel et F1}
+\subsection{Limites des métriques classiques : précision, rappel et F1}
 
 Les métriques usuelles (précision, rappel, F1) sont couramment utilisées pour évaluer les tâches d’extraction. Cependant, dans notre protocole, où les entrées sont alignées par transport optimal, elles deviennent trompeuses :
 
@@ -233,7 +268,7 @@ Les métriques usuelles (précision, rappel, F1) sont couramment utilisées pour
 \item la F1 hérite de ces biais et surestime les performances.
 
 \end{itemize}
-\subsubsection{Integrated Matching Quality (IMQ) : une métrique robuste}
+\subsection{Integrated Matching Quality (IMQ)}
 
 Pour dépasser ces limites, nous exploitons directement la distance $d_e\$ pour définir un score de qualité \$q_i = 1 - d_e(g_i, p_i)$, qui reflète la proximité entre une entrée prédite et sa référence.
 
@@ -247,7 +282,7 @@ où $F(t)\$ est la fraction des correspondances de qualité \$q_i \geq t$.
 
 L’IMQ résume ainsi la qualité globale des appariements, récompensant à la fois leur nombre et leur proximité. Un score de 1 indique un alignement parfait. Cette métrique continue, indépendante de seuils arbitraires, est particulièrement adaptée aux sorties LLM, où de légères divergences sont fréquentes même sous fortes contraintes structurelles.
 
-\section{Résultats et analyse}
+\subsection{Résultats et analyse}
 
 Nous avons appliqué notre méthode d’appariement sur cinq pages distinctes (109 entrées), chacune traitée indépendamment et présentant des qualités OCR variables. Le tableau ci-dessous présente les résultats pour chaque page OCRisée sans segmentation ni correction, avec les tailles des ensembles de référence et prédits, ainsi que le nombre de correspondances retenues par transport optimal :
 
@@ -263,7 +298,7 @@ Toutes les pages affichent une précision et un rappel « biaisés » parfaits ;
 
 L’\textbf{IMQ}, en revanche, fournit une évaluation plus fine, en capturant la distribution des qualités de correspondances. Pour toutes les pages traitées, les scores IMQ restent élevés (entre 0.8193 et 0.9591), montrant une homogénéité forte entre correspondances. L’IMQ évalue donc à la fois la complétude et la proximité sémantico-syntaxique des appariements, jouant un rôle hybride entre rappel qualitatif et précision pondérée.
 
-\subsection{Variations entre pages}
+ Variations entre pages
 
 \emph{ \textbf{Pages 5 et 10} : IMQ plus bas, lié à des incohérences typographiques. De nombreux prénoms n’y sont pas mis entre parenthèses après le nom, contrairement à l’attendu dans le }ground truth* (21 \% des entrées sur la page 5, 39 \% sur la page 10). Cela augmente artificiellement la distance textuelle et dégrade la qualité perçue des correspondances.
 
@@ -275,7 +310,7 @@ L’\textbf{IMQ}, en revanche, fournit une évaluation plus fine, en capturant l
 \end{itemize}
 Un cas particulier : sur la page 2, une personne est mentionnée deux fois (comme sénateur et comme ministre). Le \emph{ground truth} distingue ces deux entrées, tandis que le LLM les fusionne. Cela réduit artificiellement le rappel mais correspond à une rationalisation fonctionnelle du modèle.
 
-\subsection{Comparaison avec OCR « parfait »}
+ Comparaison avec OCR « parfait »
 
 Lorsque l’on compare avec l’OCR jugé « parfait » (corrigé manuellement), les résultats s’améliorent globalement :
 
@@ -290,8 +325,6 @@ Lorsque l’on compare avec l’OCR jugé « parfait » (corrigé manuellement),
 Dans certains cas, les versions OCR bruitées donnent des résultats paradoxalement meilleurs. Par exemple, les en-têtes courants capturés par l’OCR bruité fournissent un contexte utile pour les entrées tronquées en début de page. Ainsi, sur la page 2, le LLM a correctement reproduit la double mention (sénateur/ministre), alors que l’OCR corrigé ne l’a pas permis.
 
 Cela montre que la performance dépend non seulement du LLM, mais aussi de l’adéquation entre ses comportements et la conception du \emph{ground truth}.
-
-\subsection{Enseignements}
 
 \begin{itemize}
 \item Le prompt apparaît comme un paramètre critique : certains écarts ne sont pas liés au modèle, mais aux instructions données.
@@ -358,7 +391,7 @@ Une voie prometteuse consiste à \textbf{systématiser et automatiser ce process
 
 \item Nadeau & Sekine → `\footcite[][]{nadeausekine}`
 
-\item Peyré & Cuturi → `\footcite[][]{peyre}`
+\item Peyré & Cuturi → ``
 
 \item Radford et al. (2018) → `\footcite[][]{radford2018}`
 
