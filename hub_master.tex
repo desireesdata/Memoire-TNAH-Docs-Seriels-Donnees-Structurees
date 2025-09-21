@@ -51,8 +51,11 @@
 \usepackage{minted} 
 \usepackage{booktabs}
 \usepackage{graphicx}
+\usepackage{xparse} 
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
+\usepackage{l3sys-query} 
+\usepackage{xstring}    
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CONFIGURATION DE MISE EN PAGE
@@ -183,6 +186,27 @@
 }
 
 
+% \AppendixDir
+\newcommand{\AppendixDir}[2][]{%
+	\QueryFiles{#2/*.jpg}{%
+		\begingroup
+		\StrBehind[Last]{##1}{/}[\basename]%
+		\begin{figure}[p]\centering
+			\includegraphics[width=\linewidth,height=.9\textheight,keepaspectratio]{##1}
+			\caption{#1\ifx\empty#1\empty\else\space—\space\fi\texttt{\basename}}
+		\end{figure}
+		\endgroup
+	}%
+}
+
+\newcommand{\DumpImages}[3][]{%
+	\QueryFiles[sort=name]{#2/#3}{%
+		\begin{figure}[p]\centering
+			\includegraphics[width=\linewidth,height=.85\textheight,keepaspectratio]{##1}
+			\caption{#1}%
+		\end{figure}%
+	}%
+}
 
 
  %%%%%%%%%%%%%% INFORMATIONS POUR LA PAGE DE TITRE
@@ -353,12 +377,20 @@
 \part{Conclusion}
 
 %%%%%%%%%%%%%%%%%%
+% Compilateur : lualatex (avec la macro \AppendixImages définie plus haut)
 
-\appendix %Des appendices: tables figures, etc
+\appendix
+\chapter[Annexes A]{Sources primaires}
 
-\chapter[Titre court]{Le titre très long de la première annexe}
+\section{Archives nationales}
 
-%\input{fichier.tex}
+Ces photographies sont des reproductions des documents présents dans la cote 19840069/1 et 19840069/6 (ex-cote F60bis 8038). Ces documents permettent de retracer l'histoire de l'organisation du \textit{Journal Officiel}, notamment du point de vue des statuts juridiques et de la gestion des personnels et du matériel.
+
+\DumpImages[Archives nationales — cote 19840069/1 — principales étapes du JO]
+{annexes/cote_1_principales_etapes_du_jo}{*.jpg}
+
+\DumpImages[Archives nationales — cote 19840069/6 — mémoire fonctionnement historique (juil. 1945)]
+{annexes/cote_6_memoire_fonctionnement_historique_direction_jo_juillet_1945}{*.jpg}
 
 \newpage{\pagestyle{empty}\cleardoublepage}
 
