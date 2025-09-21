@@ -244,17 +244,30 @@ Cependant, dans notre protocole, où les entrées sont alignées par transport o
 
 \subsection{Une métrique adaptée : l'Integrated Matching Quality (IMQ)}
 
-Pour dépasser ces limites, nous exploitons directement la distance $d_e$ pour définir un score de qualité $q_i = 1 - d_e(g_i, p_i)$, qui reflète la proximité entre une entrée prédite et sa référence.
+Les métriques classiques ne parviennent pas à capturer la qualité nuancée des appariements structurés, en particulier lorsque les prédictions sont partiellement correctes mais pas parfaitement alignées avec les références. Pour répondre à cette limitation, nous proposons une métrique continue, l'Integrated Matching Quality (IMQ), qui évalue la qualité globale des appariements en intégrant une mesure de similarité sur l'ensemble des seuils possibles.
 
-Plutôt que de fixer un seuil arbitraire pour décider du « bon » appariement, nous calculons la proportion de correspondances de qualité supérieure à un seuil $t$, puis intégrons sur tout l’intervalle $[0,1]$ :
+Pour chaque paire d'entrées appariées, c'est-à-dire une entrée prédite $p_i$ et une entrée de référence $g_i$, nous calculons un score de qualité $q_i$ basé sur la distance $d_e(g_i, p_i)$ que nous venons de définir. Le score de qualité est défini comme suit :
 
-$$
-IMQ = \int_0^1 F(t) \, dt
-$$
+$$q_i = 1 - d_e(g_i, p_i)$$
 
-où $F(t)$ est la fraction des correspondances de qualité $q_i \geq t$.
+Ce score $q_i$ reflète la proximité entre la prédiction et la référence, avec une valeur de 1 pour un appariement parfait et une valeur proche de 0 pour un appariement très éloigné.
 
-L’IMQ résume ainsi la qualité globale des appariements, récompensant à la fois leur nombre et leur proximité. Un score de 1 indique un alignement parfait. Cette métrique continue, indépendante de seuils arbitraires, est particulièrement adaptée aux sorties LLM, où de légères divergences sont fréquentes même sous fortes contraintes structurelles.
+Pour évaluer la qualité des appariements de manière globale, nous introduisons la fonction $F(t)$, qui représente la proportion des appariements dont le score de qualité $q_i$ est supérieur ou égal à un seuil $t$. Cette fonction est définie par :
+$$F(t) = \frac{1}{n} \sum_{k=1}^{n} \mathbb{1}_{q_k \geq t}$$
+
+où $n$ est le nombre total d'appariements et $\mathbb{1}_{q_k \geq t}$ est une fonction indicatrice qui vaut 1 si $q_k \geq t$, et 0 sinon. La fonction $F(t)$ permet de visualiser la distribution des scores de qualité $q_i$ sur l'intervalle $[0, 1]$. Par exemple, si tous les appariements sont parfaits, $F(t) = 1$ pour tout $t \in [0, 1]$. À l'inverse, si certains appariements sont de mauvaise qualité, $F(t)$ décroît à mesure que $t$ augmente.
+
+L'IMQ est défini comme l'aire sous la courbe de $F(t)$ sur l'intervalle $[0, 1]$ :
+
+$$\text{IMQ} = \int_0^1 F(t) \, dt$$
+
+Cette intégrale résume la qualité globale des appariements en prenant en compte à la fois le nombre d'appariements de haute qualité et leur proximité avec les références. Plus il y a d'appariements avec un $q_i$ élevé, plus $F(t)$ reste proche de 1 pour des valeurs de $t$ élevées, ce qui augmente l'IMQ. Même si certains appariements ne sont pas parfaits, leur contribution à l'IMQ dépend de leur score $q_i$, ce qui permet de valoriser les appariements partiellement corrects.
+
+L'IMQ offre une interprétation intuitive : une valeur de 1 indique que tous les appariements sont parfaits, quand une valeur proche de 0 signifie que la majorité des appariements sont de mauvaise qualité. Les valeurs intermédiaires reflètent un compromis entre le nombre d'appariements corrects et leur proximité avec les références.
+
+L'un des principaux avantages de l'IMQ est son indépendance aux seuils arbitraires. Contrairement aux métriques binaires, l'IMQ ne dépend ainsi pas d'un seuil fixe pour juger de la qualité d'un appariement. Elle intègre la qualité sur l'ensemble des seuils possibles, ce qui la rend particulièrement adaptée aux sorties des LLMs, où des divergences mineures sont fréquentes même sous de fortes contraintes structurelles.
+
+Un autre avantage est sa robustesse aux divergences mineures. Les petites variations, comme une étiquette prédite proche de la référence, sont moins pénalisées que dans les métriques classiques. Cela permet une évaluation plus fine et plus représentative de la performance réelle des modèles, tout en intégrant la problématique de l'appariement.
 
 \subsection{Résultats et analyse}
 
