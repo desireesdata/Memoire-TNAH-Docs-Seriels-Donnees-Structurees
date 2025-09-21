@@ -114,7 +114,7 @@ Un second volet des expérimentations a porté sur la construction de la vérit�
 \label{fig:barthou}
 \end{figure}
 
-Sur le plan technique, la vérité terrain est lié au schéma de données (voir Fig. \ref{fig:modelpy}). Le schéma de données fait office de \enquote{carte} qui vient guider la production textuelle du LLM. Il indique \enquote{où} mettre les bons mots dans les bonnes boîtes, les bons intitulés avec les bonnes clés. Pour éviter de démultiplier les paramètres à tester, le prompt (voir : ANNEXE 31) et le schéma (ANNEXE 32) ont été stabilisés à l'issu d'un processus itératif pour évaluer la granularité adéquate. Dans le cadre de l'évaluation, seul le nom du sénateur et les pages de références ont été retenues. Pour guider au mieux la génération du JSON par le LLM, on ajoute à notre schéma des descriptions pour qu'il puisse être plus attentif pour qu'il puisse plus facilement mettre les données dans les bonnes boîtes \ref{fig:model}.
+Sur le plan technique, la vérité terrain est lié au schéma de données (voir Fig. \ref{fig:modelpy}). Le schéma de données fait office de \enquote{carte} qui vient guider la production textuelle du LLM. Il indique \enquote{où} mettre les bons mots dans les bonnes boîtes, les bons intitulés avec les bonnes clés. Pour éviter de démultiplier les paramètres à tester, le prompt (voir : ANNEXE 31) et le schéma (ANNEXE 32) ont été stabilisés à l'issu d'un processus itératif pour évaluer la granularité adéquate. Dans le cadre de l'évaluation, seul le nom du sénateur et les pages de références ont été retenues. Pour guider au mieux la génération du JSON par le LLM, on ajoute à notre schéma des descriptions pour qu'il puisse être plus attentif pour qu'il puisse plus facilement mettre les données dans les bonnes boîtes (Voir Fig.\ref{fig:model}).
 
 \begin{figure}[htbp]
 \centering
@@ -123,7 +123,7 @@ Sur le plan technique, la vérité terrain est lié au schéma de données (voir
 \label{fig:model}
 \end{figure}
 
-Le schéma (\ref{fig:model}) joue donc ici le rôle de grammaire opérationnelle : il décrit précisément la structure attendue des sorties (nom, rôle et références paginaires des intervenants), et contraint le modèle à produire un JSON validable. Les premières clés (« Senateur », « ListeSenateur ») ont rapidement montré leurs limites : elles risquaient l'invisibilité d’autres acteurs -- comme les ministres -- et biaisaient l’extraction. La version finale de la vérité terrain (ANNEXE 33) adopte des catégories plus neutres (« Intervenant »), révélant que la modélisation n’est jamais un simple exercice technique mais un choix interprétatif.
+Le schéma joue donc ici le rôle de grammaire opérationnelle : il décrit précisément la structure attendue des sorties (nom, rôle et références paginaires des intervenants), et contraint le modèle à produire un JSON validable. Les premières clés (« Senateur », « ListeSenateur ») ont rapidement montré leurs limites : elles risquaient l'invisibilité d’autres acteurs -- comme les ministres -- et biaisaient l’extraction. La version finale de la vérité terrain (ANNEXE 33) adopte des catégories plus neutres (« Intervenant »), révélant que la modélisation n’est jamais un simple exercice technique mais un choix interprétatif.
 
 Quant aux données produites automatiquement par cette chaîne de traitement stabilisées et appliquées sur l'ensemble des pages des \emph{Tables} du Sénat de 1931 (extraits en annexe : ANNEXE 34) , elles semblent être cohérentes. Mais, à défaut d'évaluation, on ne pas tirer de conclusion décisives.
 
