@@ -391,7 +391,7 @@ Cette combinaison de schéma et de prompt générique ouvre la voie à une autom
 			
 		\end{axis}
 	\end{tikzpicture}
-	\caption{Scores IMQ par page selon la qualité d’OCR/segmentation.}
+	\caption{Scores IMQ par page selon la qualité d’OCR/segmentation. (Précision et rappel non tracés car $\approx 1.0$ partout.)}
 	\label{fig:imq_par_page}
 \end{figure}
 
@@ -405,3 +405,4 @@ L’introduction de la métrique IMQ s’est révélée essentielle : elle perme
 Plusieurs pistes s’ouvrent pour renforcer la robustesse et la généralisation de l’approche. Tout d'abord, il s'agirait de relier plus directement données extraites et questions de recherche pour s'assurer que les hypothèses de réponse formulées à partir des données générées restent robustes dans le temps. Cela permettrait de mieux ancrer les résultats dans des problématiques historiques concrètes. Ensuite, évaluer le prompt lui-même : cette étape reste à formaliser pour parvenir à un protocole d’évaluation véritablement complet. Une analyse systématique des variations de prompt pourrait révéler des axes d’amélioration significatifs. Enfin, repenser la structuration de données : elle ne doit pas être considérée comme un simple prétraitement neutre, mais comme un choix déterminant pour les analyses historiques possibles. La manière dont les données sont structurées influence directement les types de questions qui peuvent être posées et les réponses qui peuvent être obtenues.
 
 De ce point de vue, le prompt et le schéma de données apparaissent comme des méta-paramètres du système de production de données historiques. Leur génération et leur ajustement doivent être conçus comme faisant partie intégrante de la chaîne de traitement. Une optimisation rigoureuse de ces éléments pourrait améliorer encore la qualité et la fiabilité des données produites. Une poursuite prometteuse à ce travail consisterait donc à systématiser et automatiser ce processus de méta-optimisation, afin de rendre ces approches reproductibles, transparentes et accessibles à des utilisateurs non spécialistes. Cela permettrait de démocratiser l’utilisation de ces techniques avancées dans des contextes variés, tout en garantissant une qualité constante des résultats. Ce travail montre que l’utilisation des LLM pour la structuration de données historiques est non seulement faisable, mais aussi efficace, ouvrant ainsi de nouvelles perspectives pour la recherche en sciences humaines.
+

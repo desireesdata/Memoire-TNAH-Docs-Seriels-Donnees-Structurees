@@ -1,0 +1,57 @@
+
+- Brown et al. → `[@brown]`
+
+- [@purentimeus], [@poudra], [@lamasse], [@eugenedroitpol] [@saudrais] [@lemesle], [@bonnard] [@coniez] [@morel] [@prost] [@coniez]
+
+- [@dirjo] [@jo1931] [@rygiel] [@gardey] [@boutier] [@comete] [@chazalon][@com][@comm]
+
+- Chen et al. → `[@chen]`
+
+- Clavert & Muller → `[@clavertmuller]`
+
+- Devlin et al. → `[@devlin]`
+
+- Finkel, Grenager & Manning → `[@finkelmanning]`
+
+- Humphries et al. → `[@humphries]`
+
+- Kirillov et al. → `[@kirillov]`
+
+- Kišš, Beneš & Hradiš → `[@kisshradis]`
+
+- Knutsen → `[@knutsen]`
+
+- Kodym & Hradiš → `[@kodymhradis]`
+
+- Kohút & Hradiš → `[@kohuthradis]`
+
+- Kojima et al. → `[@kojima]`
+
+- Liu et al. → `[@liu]`
+
+- de Marneffe et al. → `[@marneffe]`
+
+- Mintz et al. → `[@mintz]`
+
+- Mistral AI → `[@mistralai]`
+
+- Morel → `[@morel]`
+
+- Nadeau & Sekine → `[@nadeausekine]`
+
+- Peyré & Cuturi → ``
+
+- Radford et al. (2018) → `[@radford2018]`
+
+- Radford et al. (2019) → `[@radford2019]`
+
+- Wei et al. → `[@wei]`
+
+- Willard & Louf → `[@willardlouf]`
+
+- Yuan & Sester → `[@yuansester]`
+
+- Zhang & Shasha → `[@zhangshasha]`
+
+- Zhao et al. → `[@zhao]`
+
