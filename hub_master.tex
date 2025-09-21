@@ -56,7 +56,8 @@
 \pgfplotsset{compat=1.18}
 \usepackage{l3sys-query} 
 \usepackage{xstring}    
-
+\usepackage{pdflscape}
+\usepackage[percent]{overpic}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CONFIGURATION DE MISE EN PAGE
 
@@ -75,7 +76,7 @@
 
 %%%%%  Configurer le document selon les normes de l'école
 
-\usepackage[margin=2.5cm]{geometry} %marges
+\usepackage[margin=2.5cm]{geometry} %marges enfin je crois
 \usepackage{setspace} % espacement qui permet ensuite de définir un interligne
 \onehalfspacing % interligne de 1.5
 \setlength\parindent{1cm} % indentation des paragraphes à 1 cm
@@ -276,11 +277,11 @@
 
 	\chapter{Résumé}
 \medskip
-	Résumé du mémoire en français. Cette page ne doit pas dépasser une page.\\
+Ce mémoire porte sur la transformation de documents numérisés en données structurées, à partir d’un cas d’étude : les Tables annuelles du Sénat de 1931, publiées dans le Journal Officiel sous la Troisième République. Ces tables, conçues comme instruments d’orientation dans les débats parlementaires, sont ici mobilisées comme terrain d’expérimentation pour tester la capacité des technologies actuelles à rendre les sources sérielles exploitables. Après une première étape de reconnaissance optique de caractères (OCR), qui convertit les images scannées en texte interrogeable, les informations sont extraites grâce aux grands modèles de langage (LLM). Ceux-ci, guidés par des instructions (prompts) et des schémas formels de données, produisent automatiquement des sorties organisées et comparables. L’évaluation de ces résultats repose sur une vérité terrain construite manuellement et sur des méthodes de comparaison adaptées, comme le transport optimal. Cette recherche interroge ainsi les conditions techniques et épistémologiques qui permettent de fonder la confiance dans les corpus numériques issus de la numérisation.\\
 	
-	\textbf{Mots-clés:} Journal Officiel; Sénat; Génération structurée; LLM; Mezanno; séparés par des points-virgules.
+	\textbf{Mots-clés:} Journal Officiel; Sénat; Génération structurée; LLM; OCR; Mezanno.
 	
-	\textbf{Informations bibliographiques:} Prénom Nom, \textit{Titre du mémoire. Sous-titre du mémoire}, mémoire de master \enquote{Technologies numériques appliquées à l'histoire}, dir. [Noms des directeurs.trices], École nationale des chartes, 20245.
+	\textbf{Informations bibliographiques:} Joël Féral, \textit{Des \textit{Tables des noms} du Sénat aux données structurées. Expérimentation et évaluation d’une chaîne de traitement avec des grands modèles de langue}, mémoire de master \enquote{Technologies numériques appliquées à l'histoire}, dir. [Noms des directeurs.trices], École nationale des chartes, 2024-2025.
 	
 		\newpage{\pagestyle{empty}\cleardoublepage}
 	
@@ -374,7 +375,18 @@
 
 
 
-\part{Conclusion}
+\part*{Conclusion}
+
+Ce mémoire a pris pour objet un type de source longtemps associé aux pratiques sérielles — les tables annuelles du *Journal Officiel* — afin d’examiner ce que deviennent, dans un environnement numérisé et OCRisé, des matériaux pensés pour le repérage et la cumulativité. En décrivant la place des tables dans l’écosystème documentaire de la Troisième République, il a montré que ces instruments ne sont pas de simples annexes, mais des médiations éditoriales qui recomposent la matière parlementaire en entrées réutilisables. Leur passage par la numérisation, la mise à disposition via IIIF et la transcription par OCR les expose à des opérations techniques qui en renouvellent la lisibilité autant qu’elles en déplacent les fragilités. C’est précisément ce déplacement — de la page imprimée à la donnée manipulable — qui justifie d’interroger la chaîne complète, du document image à la structure exploitable, en la pensant comme une opération intellectuelle autant que technique.
+
+Dans cette perspective, l’outil Corpusense a servi de fil conducteur pour articuler des briques hétérogènes — accès IIIF, OCR PERO, extraction guidée par schéma avec un LLM — en une pipeline opérante. L’intérêt d’une telle intégration n’est pas de prétendre à l’automatisation parfaite, mais d’offrir un cadre où les décisions de modélisation deviennent explicites et révisables : choix du schéma, formulation des consignes, contraintes de sortie et stratégies de segmentation. La co-définition du prompt et du schéma Pydantic a montré que la « sortie structurée » n’est jamais un simple formatage, mais un véritable design des données, qui oriente ce que le modèle voit, agrège ou omet. À ce titre, l’enjeu n’est pas de remplacer le travail historien, mais de le reconfigurer : le chercheur devient l’agent qui règle les conditions de lisibilité documentaire et qui assume les arbitrages entre granularité, généralité et coût d’implémentation.
+
+L’apport principal du travail réside alors dans la proposition d’un protocole d’évaluation aligné sur cette réalité opérationnelle. Plutôt que de s’en remettre à des métriques binaires et sensibles à l’ordre, l’évaluation procède en deux temps complémentaires : d’abord, une cartographie des écarts par matrices de similarité, utiles pour diagnostiquer omissions et décalages ; ensuite, un appariement global par transport optimal, qui établit les correspondances one-to-one en minimisant un coût combinant distance textuelle et recouvrement d’ensembles de pages. La mesure synthétique IMQ, intégrant la distribution continue des qualités d’appariement, permet de qualifier la performance sans dépendre d’un seuil arbitraire et de valoriser les correspondances partiellement correctes mais historiquement utiles. Les résultats, robustes sur cinq échantillons aux qualités d’OCR contrastées, suggèrent qu’une extraction contrainte par schéma peut produire, dès à présent, des données mobilisables pour l’analyse, à condition de documenter publiquement les paramètres de la chaîne.
+
+Ces acquis n’effacent pas les limites. D’un point de vue documentaire, la variabilité de la mise en page, les idiosyncrasies typographiques et les renvois implicites invitent à étendre l’évaluation au-delà de la page et à tester des unités multi-pages. D’un point de vue linguistique, l’usage de distances d’édition et d’IoU assume un réalisme « lexical » adapté aux tables, mais ne dit encore rien des proximités sémantiques nécessaires pour d’autres tâches (thématisation, typologie d’actes). D’un point de vue méthodologique, la stabilité apparente des scores rappelle que le prompt et le schéma sont des méta-paramètres : ils doivent faire l’objet d’expériences contrôlées, avec variations systématiques et publication des réglages. Enfin, du point de vue épistémique, la confiance n’est pas un postulat : elle se gagne par la traçabilité des choix, la reproductibilité des calculs et la possibilité pour un tiers de rejouer l’ensemble du pipeline.
+
+En définitive, ce mémoire plaide pour une pratique historienne outillée qui assume la continuité entre modélisation, extraction et évaluation. Les tables annuelles, parce qu’elles sont déjà une mise en ordre du politique, forment un terrain privilégié pour éprouver cette continuité : elles autorisent une montée en généralité sans rompre le lien avec la matérialité des sources. L’intégration de chaînes techniques comme Corpusense ne vaut que si elle rend visibles ses propres conditions de production et si elle s’adosse à des protocoles d’évaluation publics, discutables et cumulatifs. C’est à ce prix que la donnée structurée cesse d’être une simple commodité et redevient un objet d’enquête partageable : un résultat provisoire, situé, mais suffisamment qualifié pour porter des questions d’histoire. Les prolongements sont clairs : élargir l’échantillon, systématiser l’étude des prompts et des schémas, et relier plus étroitement les métriques aux usages analytiques visés (chronologie des interventions, réseaux d’acteurs, comparaisons inter-annuelles). Autrement dit, continuer à tenir ensemble les conditions techniques de la preuve et les ambitions interprétatives de la discipline.
+
 
 %%%%%%%%%%%%%%%%%%
 % Compilateur : lualatex (avec la macro \AppendixImages définie plus haut)
@@ -384,15 +396,38 @@
 
 \section{Archives nationales}
 
-Ces photographies sont des reproductions des documents présents dans la cote 19840069/1 et 19840069/6 (ex-cote F60bis 8038). Ces documents permettent de retracer l'histoire de l'organisation du \textit{Journal Officiel}, notamment du point de vue des statuts juridiques et de la gestion des personnels et du matériel.
+Ces photographies sont des reproductions des documents présents dans les articles 1 et 6 de la cote 19840069 (ex-cote F60bis 8038). Ces documents permettent de retracer l'histoire de l'organisation du \textit{Journal Officiel}, notamment du point de vue des statuts juridiques et de la gestion des personnels et du matériel.
 
-\DumpImages[Archives nationales — cote 19840069/1 — principales étapes du JO]
-{annexes/cote_1_principales_etapes_du_jo}{*.jpg}
 
-\DumpImages[Archives nationales — cote 19840069/6 — mémoire fonctionnement historique (juil. 1945)]
-{annexes/cote_6_memoire_fonctionnement_historique_direction_jo_juillet_1945}{*.jpg}
+%\DumpImages[Archives nationales — cote 19840069/1 — principales étapes du JO]
+%{annexes/cote_1_principales_etapes_du_jo}{*.jpg}
 
-\newpage{\pagestyle{empty}\cleardoublepage}
+%\DumpImages[Archives nationales — cote 19840069/6 — mémoire fonctionnement historique (juil. 1945)]
+%{annexes/cote_6_memoire_fonctionnement_historique_direction_jo_juillet_1945}{*.jpg}
+
+%\newpage{\pagestyle{empty}\cleardoublepage}
+
+\section{Organisation documentaire du Journal Officiel}
+
+Ce schéma, avec une pseudo-grammaire relationnelle, représente l'organisation technique, administrative et documentaire du Journal Officiel.
+
+\clearpage
+\begin{landscape}
+	\begin{figure}[p]
+		\thispagestyle{empty}
+		\centering
+		\hspace*{-2.5cm}%
+		\includegraphics[width=1.7\textwidth,height=1.7\textheight,keepaspectratio]{annexes/jorf.png}
+		\caption{Organisation documentaire du \textit{Journal Officiel}.}
+		\label{fig:jorf-schema}
+	\end{figure}
+\end{landscape}
+\clearpage
+
+\chapter[Annexes B]{Outils et programmation}
+
+\section{Sortie structurée}
+
 
 %%%%%%%%%%%%%%%%%%
 
