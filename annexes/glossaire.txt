@@ -1,5 +1,6 @@
 - HTTP
 - API
+- IIIF
 - Numérisation
 - ASCII
 - Unicode
