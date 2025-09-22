@@ -1,3 +1,18 @@
 - HTTP
 - API
 - Numérisation
+- ASCII
+- Unicode
+- Project Gutenberg
+- CER / WER
+- JPEG2000
+- JSON
+- CSV
+- métadonnées
+- BERT
+- LSTM
+- Transformers
+- TEI
+- Crowdsourcing
+- Graphes
+- Arbres
