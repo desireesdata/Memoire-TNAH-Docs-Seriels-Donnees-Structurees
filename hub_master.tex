@@ -58,7 +58,32 @@
 \usepackage{xstring}    
 \usepackage{pdflscape}
 \usepackage[percent]{overpic}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{upquote} 
+\usepackage{inconsolata}
 
+\definecolor{listingbg}{RGB}{248,248,248}
+\definecolor{listingrule}{RGB}{220,220,220}
+
+
+\lstdefinestyle{promptcode}{
+	basicstyle=\ttfamily\small,      % look "code"
+	columns=fullflexible,            % évite les espacements bizarres
+	keepspaces=true,                 % préserve les espaces
+	breaklines=true,                 % coupe automatiquement
+	breakatwhitespace=false,         % peut couper au milieu d'un long token
+	breakindent=0pt,
+	postbreak=\mbox{\textcolor{gray}{$\hookrightarrow$}\space}, % marqueur de coupure
+	showstringspaces=false,
+	numbers=left,
+	numbersep=8pt,
+	frame=single,
+	rulecolor=\color{listingrule},
+	backgroundcolor=\color{listingbg},
+	xleftmargin=1em,                 % petite marge à gauche
+	framexleftmargin=1em, framextopmargin=.5em, framexbottommargin=.5em
+}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CONFIGURATION DE MISE EN PAGE
 
 %%%%%% Les compteurs (sections, subsections, etc)
@@ -208,6 +233,9 @@
 		\end{figure}%
 	}%
 }
+
+\DeclareCaptionFormat{lst-num-only}{\thelstlisting\space:\space#3}
+\captionsetup[lstlisting]{format=lst-num-only}
 
 
  %%%%%%%%%%%%%% INFORMATIONS POUR LA PAGE DE TITRE
@@ -430,10 +458,14 @@ Ce schéma, avec une pseudo-grammaire relationnelle, représente l'organisation 
 \end{landscape}
 \clearpage
 
-\chapter[Annexes B]{Outils et programmation}
+\chapter[Annexes B]{Sortie structurée}\label{ann:B}
 
-\section{Sortie structurée}
 
+\lstinputlisting[style=promptcode,caption={Prompt},label={lst:prompt}]{annexes/prompt.txt}
+\lstinputlisting[style=promptcode,caption={Schéma},label={lst:schema}]{annexes/schema.txt}
+
+\lstinputlisting[style=promptcode,caption={Prédictions — page 2},label={lst:pred2}]{annexes/prediction_page_2.txt}
+\lstinputlisting[style=promptcode,caption={Vérité terrain — page 2},label={lst:vt2}]{annexes/vt_page_2.txt}
 
 %%%%%%%%%%%%%%%%%%
 
