@@ -122,7 +122,7 @@ Bien que Tesseract soit devenu un standard libre et largement utilisé pour l’
 
 Dans le prolongement de ces initiatives, la plateforme eScriptorium, développée à l’École pratique des hautes études (EPHE/PSL) au sein du projet Huma-Num, combine différents modules de segmentation et de reconnaissance. Elle intègre notamment Pero OCR pour la détection des zones et la segmentation des lignes, et Kraken pour la transcription. eScriptorium offre en outre une interface collaborative qui permet à des équipes de chercheurs, mais aussi à des communautés élargies, d’annoter, d’entraîner et de partager des modèles. Cette dimension participative en fait un outil particulièrement adapté aux humanités numériques, où la correction et l’amélioration collective des résultats constituent un enjeu central.
 
-\section{CER, WER : métriques pour évaluer la qualité de l'OCR}
+\section{Évaluer la qualité de l'OCR}
 
 Dans ce contexte, la question de l’évaluation des performances devient cruciale. Si la reconnaissance automatique produit un texte exploitable, il est nécessaire de mesurer la qualité de cette transcription afin d’orienter les corrections, de comparer les moteurs ou de juger de l’efficacité d’un entraînement. Deux indicateurs dominent aujourd’hui dans le champ : le CER (\emph{Character Error Rate}) et le WER (\emph{Word Error Rate}).
 
@@ -222,7 +222,7 @@ D’autres structures plus complexes existent, comme les arbres, qui permettent 
 
 Dans le cas qui nous occupe, à savoir l’extraction d’informations à partir des documents parlementaires, les \emph{ensembles et séquences d’enregistrements} sont les plus pertinents. Ils correspondent directement à la structure des \emph{Tables nominatives}, où l’on recense des individus (sénateurs), des événements (leurs interventions) et des attributs associés (objets des débats, références de page). C’est donc sur ce type de représentation que nous concentrons notre attention dans la dernière partie du mémoire. Cependant, la modélisation n'est en pratique pas qu'un exercice intellectuel. L'expérimentation nous renseigne et nous permet d'amender la façon de voir les données, de les mettre en relation. Tout dépend de ce à quoi on tient savoir : si la relation entre les sénateurs importent plus que leur trajectoire intellectuelle, alors un graphe sera plus pertinent qu'une séquence d'enregistrements. Encore une fois, la dimension technique de la modélisation repose sur des enjeux valuatifs de la recherche.
 
-\section{Produire des données structurées à partir de texte}
+\section[Produire des données structurées]{Produire des données structurées à partir de texte}
 
 Enfin, la question centrale demeure : comment générer des données structurées à partir de texte brut ? Trois grandes familles d’approches dominent : les approches par \emph{pattern matching}, les \emph{approches extractives} et les \emph{approches génératives} \footcite[][]{graham}.
 
@@ -290,7 +290,7 @@ Dans le domaine des sciences humaines et sociales, ces modèles ouvrent néanmoi
 
 En définitive, les approches génératives déplacent le centre de gravité de l’extraction d’information. Là où l’on cherchait auparavant à construire des modèles spécialisés et rigides, il s’agit désormais d’orchestrer une génération encadrée par des consignes précises. Cette plasticité ouvre un champ nouveau pour la capture sémantique des corpus textuels, mais elle suppose d’accompagner leur usage de garde-fous méthodologiques, afin de garantir la fiabilité et la traçabilité des données produites.
 
-\section{La sortie structurée via LLM pour le \emph{Journal Officiel}}
+\section[La sortie structurée via LLM]{La sortie structurée via LLM pour le \emph{Journal Officiel}}
 
 Il est intéressant de revenir sur l'approche générative car c'est celle-ci qui a été retenue. En effet : l’application des approches génératives par grands modèles de langage, dans le cas du \emph{Journal Officiel}, et plus spécifiquement des \emph{Tables nominatives} du Sénat, a l'avantage d'être simple et rapide à mettre en place. Ces tables, qui fonctionnent comme des index annuels de l’activité parlementaire, présentent une organisation qui semble régulière : elles listent les noms des sénateurs, précisent le sujet de leurs interventions et renvoient aux pages correspondantes. Cette apparente homogénéité masque cependant une série de difficultés. Cette partie ne présentera pas les détails techniques, mais quelques enjeux techniques et avantages à considérer, lesquelles seront développés dans la partie suivante. La mise en page, par exemple, peut varier d’une année à l’autre; les noms sont parfois abrégés ou tronqués; et les textes portent les stigmates d’un OCR imparfait, introduisant du bruit ou des confusions typographiques. À cela s’ajoute la diversité des formulations, qui rend incertaine toute tentative de repérage par motifs fixes. Capturer la sémantique de ces tables suppose donc de dépasser la simple reconnaissance de structures formelles et d’accéder à une représentation organisée et exploitable de l’information.
 
