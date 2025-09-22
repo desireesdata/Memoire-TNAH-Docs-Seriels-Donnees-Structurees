@@ -114,7 +114,7 @@ Un second volet des expérimentations a porté sur la construction de la vérit�
 \label{fig:barthou}
 \end{figure}
 
-Sur le plan technique, la vérité terrain est lié au schéma de données (voir Fig. \ref{fig:modelpy}). Le schéma de données fait office de \enquote{carte} qui vient guider la production textuelle du LLM. Il indique \enquote{où} mettre les bons mots dans les bonnes boîtes, les bons intitulés avec les bonnes clés. Pour éviter de démultiplier les paramètres à tester, le prompt (voir annexe~\ref{ann:prompt}) et le schéma (voir annexe~\ref{ann:schema}) ont été stabilisés à l'issu d'un processus itératif pour évaluer la granularité adéquate. Dans le cadre de l'évaluation, seul le nom du sénateur et les pages de références ont été retenues. Pour guider au mieux la génération du JSON par le LLM, on ajoute à notre schéma des descriptions pour qu'il puisse être plus attentif pour qu'il puisse plus facilement mettre les données dans les bonnes boîtes (Voir Fig.\ref{fig:model}).
+Sur le plan technique, la vérité terrain est lié au schéma de données. Le schéma de données fait office de \enquote{carte} qui vient guider la production textuelle du LLM. Il indique \enquote{où} mettre les bons mots dans les bonnes boîtes, les bons intitulés avec les bonnes clés. Pour éviter de démultiplier les paramètres à tester, le prompt (voir annexe ~\ref{lst:prompt}) et le schéma (voir annexe~\ref{lst:schema}) ont été stabilisés à l'issu d'un processus itératif pour évaluer la granularité adéquate. Dans le cadre de l'évaluation, seul le nom du sénateur et les pages de références ont été retenues. Pour guider au mieux la génération du JSON par le LLM, on ajoute à notre schéma des descriptions pour qu'il puisse être plus attentif pour qu'il puisse plus facilement mettre les données dans les bonnes boîtes (Voir Fig.\ref{fig:model}).
 
 \begin{figure}[htbp]
 \centering
@@ -123,9 +123,9 @@ Sur le plan technique, la vérité terrain est lié au schéma de données (voir
 \label{fig:model}
 \end{figure}
 
-Le schéma joue donc ici le rôle de grammaire opérationnelle : il décrit précisément la structure attendue des sorties (nom, rôle et références paginaires des intervenants), et contraint le modèle à produire un JSON validable. Les premières clés (« Senateur », « ListeSenateur ») ont rapidement montré leurs limites : elles risquaient l'invisibilité d’autres acteurs -- comme les ministres -- et biaisaient l’extraction. La version finale de la vérité terrain (voir annexe~\ref{ann:pred2}) adopte des catégories plus neutres (« Intervenant »), révélant que la modélisation n’est jamais un simple exercice technique mais un choix interprétatif.
+Le schéma joue donc ici le rôle de grammaire opérationnelle : il décrit précisément la structure attendue des sorties (nom, rôle et références paginaires des intervenants), et contraint le modèle à produire un JSON validable. Les premières clés (« Senateur », « ListeSenateur ») ont rapidement montré leurs limites : elles risquaient l'invisibilité d’autres acteurs -- comme les ministres -- et biaisaient l’extraction. La version finale de la vérité terrain (voir annexe ~\ref{lst:pred2}) adopte des catégories plus neutres (« Intervenant »), révélant que la modélisation n’est jamais un simple exercice technique mais un choix interprétatif.
 
-Quant aux données produites automatiquement par cette chaîne de traitement stabilisées et appliquées sur l'ensemble des pages des \emph{Tables} du Sénat de 1931 (voir annexe~\ref{ann:vt2}) , elles semblent être cohérentes. Mais, à défaut d'évaluation, on ne pas tirer de conclusion décisives.
+Quant aux données produites automatiquement par cette chaîne de traitement stabilisées et appliquées sur l'ensemble des pages des \emph{Tables} du Sénat de 1931(voir annexe ~\ref{lst:vt2}), elles semblent être cohérentes. Mais, à défaut d'évaluation, on ne pas tirer de conclusion décisives.
 
 \subsection{Préparer l'évaluation : comparer, apparier}
 
@@ -182,7 +182,7 @@ La seconde étape exploite les pages de titre qui portent la date d’édition. 
 \label{fig:bnfjson}
 \end{figure}
 
-En combinant ces deux sources (\emph{manifest} + extraction de dates), on construit une table de correspondance exhaustive reliant chaque page d’un volume à sa date exacte de parution. Cette table, exportée en CSV, sert ensuite de base à des analyses historiennes : une référence de page extraite d’un index thématique peut être immédiatement replacée dans son contexte temporel. L’approche, entièrement automatisable, repose sur des standards ouverts (IIIF, JSON, HTTP) et sur des outils simples de parsing et de jointure de données, ce qui garantit sa robustesse et sa réutilisabilité (voir annexe~\ref{ann:vt2}).
+En combinant ces deux sources (\emph{manifest} + extraction de dates), on construit une table de correspondance exhaustive reliant chaque page d’un volume à sa date exacte de parution. Cette table, exportée en CSV, sert ensuite de base à des analyses historiennes : une référence de page extraite d’un index thématique peut être immédiatement replacée dans son contexte temporel. L’approche, entièrement automatisable, repose sur des standards ouverts (IIIF, JSON, HTTP) et sur des outils simples de parsing et de jointure de données, ce qui garantit sa robustesse et sa réutilisabilité (voir annexe ~\ref{lst:vt2}).
 
 \chapter{Livrables}
 
