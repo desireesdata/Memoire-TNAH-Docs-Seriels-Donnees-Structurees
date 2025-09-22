@@ -84,6 +84,12 @@
 	xleftmargin=1em,                 % petite marge à gauche
 	framexleftmargin=1em, framextopmargin=.5em, framexbottommargin=.5em
 }
+
+% Un niveau "sous-section" pour les sous-parties de la biblio
+\defbibheading{subsubbibintoc}[\refname]{%
+	\subsection*{#1}%
+	\addcontentsline{toc}{subsection}{#1}}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CONFIGURATION DE MISE EN PAGE
 
 %%%%%% Les compteurs (sections, subsections, etc)
@@ -328,16 +334,25 @@ Je remercie enfin mes parents et Isabelle pour leur soutien.
 %%%%%%%%%%%%%%%%%%%%%%%% BIBLIO, BIBLIOGRAPHIE %%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%% \bibliographie ici (normes de l'EnC)
 
+
 \printbibheading[heading=bibintoc]
-\printbibliography[heading=subbibintoc,keyword=primaire,title=Sources primaires]
-\printbibliography[heading=subbibintoc,keyword=archivistique,title=Méthodologie historique]
-\printbibliography[heading=subbibintoc,keyword=parlementaire,title=Droit et histoire parlementaires]
-\printbibliography[heading=subbibintoc,keyword=pat,title=Institutions  et politiques patrimoniales]
-\printbibliography[heading=subbibintoc,keyword=hn,title=Humanités numériques]
-\printbibliography[heading=subbibintoc,keyword=Numérisation,title=Vision par ordinateur et analyse de documents]
-\printbibliography[heading=subbibintoc,keyword=tal,title=Traitement automatique du langage]
-\printbibliography[heading=subbibintoc,keyword=archeologie,title=Philosophie de la technique et médialité]
-\printbibliography[heading=subbibintoc,keyword=maths,title=Mathématiques]
+
+% Sources primaires
+\printbibliography[heading=subbibintoc,keyword=primaire,title={Sources primaires}]
+
+% Titre Sources secondaires (pas d’entrées ici)
+\printbibheading[heading=subbibintoc,title={Sources secondaires}]
+
+% Sous-parties (vraies listes) sous "Sources secondaires"
+% (on évite les doublons avec notkeyword=primaire)
+\printbibliography[heading=subsubbibintoc,keyword=archivistique,notkeyword=primaire,title={Méthodologie historique}]
+\printbibliography[heading=subsubbibintoc,keyword=parlementaire,notkeyword=primaire,title={Droit et histoire parlementaires}]
+\printbibliography[heading=subsubbibintoc,keyword=pat,notkeyword=primaire,title={Institutions  et politiques patrimoniales}]
+\printbibliography[heading=subsubbibintoc,keyword=hn,notkeyword=primaire,title={Humanités numériques}]
+\printbibliography[heading=subsubbibintoc,keyword=Numerisation,notkeyword=primaire,title={Vision par ordinateur et analyse de documents}]
+\printbibliography[heading=subsubbibintoc,keyword=tal,notkeyword=primaire,title={Traitement automatique du langage}]
+\printbibliography[heading=subsubbibintoc,keyword=archeologie,notkeyword=primaire,title={Philosophie de la technique et médialité}]
+
 
 %%%% réfs oubliées %%%%
 
